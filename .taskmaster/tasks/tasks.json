@@ -9,7 +9,7 @@
         "testStrategy": "1. Verify all packages install correctly without conflicts\n2. Ensure database connection can be established\n3. Confirm the application builds and runs without errors\n4. Test that Git repository is properly initialized with correct ignore rules\n5. Validate that the chosen UI framework is properly integrated",
         "priority": "high",
         "dependencies": [],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -17,7 +17,7 @@
             "description": "Set up the Git repository with appropriate .gitignore file and create a new .NET 7/8 Web Application project with the specified framework (Razor Pages or Blazor WebAssembly).",
             "dependencies": [],
             "details": "1. Create a new directory for the project\n2. Initialize Git repository using 'git init'\n3. Create a .gitignore file for .NET projects (use GitHub's template or Visual Studio's built-in template)\n4. Create a new .NET 7/8 Web Application using the CLI command 'dotnet new webapp' for Razor Pages or 'dotnet new blazorwasm' for Blazor WebAssembly\n5. Create initial project structure following clean architecture principles:\n   - HR.LeaveManagement.API\n   - HR.LeaveManagement.Application\n   - HR.LeaveManagement.Domain\n   - HR.LeaveManagement.Infrastructure\n   - HR.LeaveManagement.Persistence\n6. Create initial README.md with project description\n7. Make initial commit",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "1. Verify Git repository is initialized correctly with .gitignore\n2. Ensure the application builds without errors\n3. Confirm project structure follows clean architecture principles\n4. Test that the web application runs locally"
           },
           {
@@ -28,7 +28,7 @@
               1
             ],
             "details": "1. Add the following NuGet packages to appropriate projects:\n   - Microsoft.EntityFrameworkCore\n   - Microsoft.EntityFrameworkCore.Sqlite\n   - Microsoft.EntityFrameworkCore.Tools\n   - Microsoft.AspNetCore.Identity.EntityFrameworkCore\n   - Microsoft.AspNetCore.Identity.UI\n   - SendGrid\n   - AutoMapper.Extensions.Microsoft.DependencyInjection\n   - FluentValidation.AspNetCore\n2. Set up project references between layers:\n   - API references Application\n   - Application references Domain\n   - Infrastructure references Application\n   - Persistence references Domain and Application\n3. Create solution file and add all projects\n4. Verify all dependencies resolve correctly",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "1. Verify all packages install correctly without conflicts\n2. Ensure project builds successfully with all references\n3. Check for any version compatibility issues between packages"
           },
           {
@@ -39,7 +39,7 @@
               2
             ],
             "details": "1. Add connection string to appsettings.json:\n   ```\n   \"ConnectionStrings\": {\n     \"DefaultConnection\": \"Data Source=hrleavemanagement.db\"\n   }\n   ```\n2. Create ApplicationDbContext class in Persistence layer inheriting from DbContext\n3. Configure DbContext to use SQLite in Program.cs or Startup.cs:\n   ```\n   services.AddDbContext<ApplicationDbContext>(options =>\n       options.UseSqlite(Configuration.GetConnectionString(\"DefaultConnection\")));\n   ```\n4. Create initial migration using EF Core Tools:\n   ```\n   dotnet ef migrations add InitialCreate\n   ```\n5. Set up database initialization and seeding code\n6. Configure development and testing environment settings in appsettings.Development.json",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "1. Test database connection can be established\n2. Verify migrations can be created and applied\n3. Ensure DbContext can be injected and used in services\n4. Test that database initialization and seeding works correctly"
           },
           {
@@ -50,7 +50,7 @@
               3
             ],
             "details": "1. Create ApplicationUser class extending IdentityUser with additional properties\n2. Configure Identity in ApplicationDbContext:\n   ```\n   public class ApplicationDbContext : IdentityDbContext<ApplicationUser>\n   ```\n3. Register Identity services in Program.cs or Startup.cs:\n   ```\n   services.AddIdentity<ApplicationUser, IdentityRole>(options => {\n       // Configure password requirements, etc.\n   })\n   .AddEntityFrameworkStores<ApplicationDbContext>()\n   .AddDefaultTokenProviders();\n   ```\n4. Configure authentication middleware in the request pipeline\n5. Create initial migration for Identity schema\n6. Set up basic login/logout functionality\n7. Configure cookie authentication settings",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "1. Verify Identity tables are created in the database\n2. Test user creation functionality\n3. Ensure authentication middleware is correctly configured\n4. Test login and logout functionality"
           },
           {
@@ -61,7 +61,7 @@
               1
             ],
             "details": "1. For Tailwind CSS:\n   - Install Node.js and npm if not already installed\n   - Initialize npm in the project: `npm init -y`\n   - Install Tailwind CSS: `npm install tailwindcss`\n   - Create Tailwind configuration file: `npx tailwindcss init`\n   - Configure PostCSS for processing Tailwind\n   - Create main CSS file with Tailwind directives\n   - Set up build process for CSS\n\n2. For Bootstrap:\n   - Add Bootstrap NuGet package: `Microsoft.AspNetCore.Components.Web.Extensions`\n   - Add Bootstrap CSS and JS references to layout file\n   - Configure Bootstrap dependencies (jQuery, Popper.js)\n\n3. Create base layout template with header, footer, and navigation\n4. Set up static files middleware in Program.cs or Startup.cs\n5. Configure bundling and minification for production",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "1. Verify UI framework is correctly installed and configured\n2. Test that styles are applied correctly\n3. Ensure responsive design works on different screen sizes\n4. Verify static files are served correctly\n5. Test bundling and minification in production mode"
           }
         ]
@@ -76,7 +76,7 @@
         "dependencies": [
           1
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -84,7 +84,7 @@
             "description": "Implement the primary entity models for the HR Leave Management System in the Domain layer, focusing on the core entities needed for the leave management functionality.",
             "dependencies": [],
             "details": "1. Create a Domain project/folder if not already existing\n2. Implement the following entity models with their properties:\n   - Employee (EmployeeID, FullName, Department, JoinDate, Role, Email, ActiveStatus)\n   - LeaveType (LeaveTypeID, Name, RequiresDoc, AllowHalfDay, Description)\n   - LeaveRequest (RequestID, EmployeeID, LeaveTypeID, FromDate, ToDate, Duration, Reason, Status, CreatedAt, ApprovedBy, Comments)\n   - EntitlementRule (RuleID, LeaveTypeID, Condition, EntitledDays)\n3. Use appropriate data types for each property\n4. Add necessary attributes for validation\n5. Implement basic constructors and methods",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Create unit tests to verify entity models have all required properties with correct data types and validation attributes"
           },
           {
@@ -93,7 +93,7 @@
             "description": "Create the remaining entity models needed for the HR Leave Management System to support the core functionality.",
             "dependencies": [],
             "details": "1. Implement the following supporting entity models with their properties:\n   - Department (DepartmentID, Name, Description, ManagerID)\n   - Unit (UnitID, Name, DepartmentID, Description)\n   - PublicHoliday (HolidayID, Name, Date, Description, IsRecurring)\n   - ApprovalWorkflow (WorkflowID, LeaveTypeID, ApproverRole, ApprovalOrder, IsRequired)\n   - AuditLog (LogID, EntityName, EntityID, Action, Timestamp, UserID, OldValues, NewValues)\n2. Use appropriate data types for each property\n3. Add necessary attributes for validation\n4. Implement basic constructors and methods",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Create unit tests to verify entity models have all required properties with correct data types and validation attributes"
           },
           {
@@ -102,7 +102,7 @@
             "description": "Define the relationships between entities and implement navigation properties to establish the database schema structure.",
             "dependencies": [],
             "details": "1. Update the entity models to include navigation properties:\n   - Employee: Add collections for LeaveRequests\n   - Department: Add collection for Employees and Units\n   - LeaveType: Add collections for LeaveRequests and EntitlementRules\n   - LeaveRequest: Add references to Employee and LeaveType\n   - EntitlementRule: Add reference to LeaveType\n   - Unit: Add reference to Department and collection of Employees\n   - ApprovalWorkflow: Add reference to LeaveType\n2. Use appropriate collection types (ICollection<T>, List<T>, etc.)\n3. Configure foreign key properties where needed\n4. Consider adding shadow properties for tracking (CreatedAt, UpdatedAt, etc.)",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Create tests to verify navigation properties are correctly defined and accessible through the entity models"
           },
           {
@@ -111,7 +111,7 @@
             "description": "Create configuration classes for Entity Framework Core to define database schema details, constraints, and indexes.",
             "dependencies": [],
             "details": "1. Create a new folder/namespace for entity configurations (e.g., 'Configurations')\n2. For each entity, create a configuration class that implements IEntityTypeConfiguration<T>\n3. In each configuration class:\n   - Configure primary keys and auto-generated IDs\n   - Set up foreign key relationships\n   - Define required fields and maximum lengths\n   - Configure indexes for frequently queried fields\n   - Set up cascade delete behaviors where appropriate\n   - Configure any unique constraints\n4. Register all configurations in the DbContext using modelBuilder.ApplyConfigurationsFromAssembly()",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Test that configurations are correctly applied by examining the model in the DbContext and verifying constraints are enforced when saving data"
           },
           {
@@ -120,7 +120,7 @@
             "description": "Generate the initial database migration, create the SQLite database, and seed it with initial test data.",
             "dependencies": [],
             "details": "1. Create a DbContext class if not already existing\n2. Register the DbContext in the application's service collection\n3. Configure the connection string for SQLite in appsettings.json\n4. Create an initial migration using EF Core tools:\n   - `dotnet ef migrations add InitialCreate`\n5. Apply the migration to create the database:\n   - `dotnet ef database update`\n6. Create a database seeder class that populates:\n   - Sample departments and units\n   - Leave types (Annual, Sick, Personal, etc.)\n   - Entitlement rules based on years of service\n   - Public holidays\n   - Test employees\n7. Implement a method to call the seeder during application startup",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "1. Verify the database schema matches the expected structure\n2. Test that seed data is correctly inserted\n3. Validate that relationships between seeded entities are maintained\n4. Test basic CRUD operations against the seeded database"
           }
         ]
@@ -136,7 +136,7 @@
           1,
           2
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -150,7 +150,7 @@
           2,
           3
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -164,7 +164,7 @@
           2,
           3
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -172,7 +172,7 @@
             "description": "Implement the core domain models, repositories, and services for leave types and entitlement rules",
             "dependencies": [],
             "details": "1. Create LeaveType entity with properties: LeaveTypeID, Name, RequiresDoc, AllowHalfDay, Description, IsActive\n2. Create EntitlementRule entity with properties: RuleID, LeaveTypeID, Condition (e.g., YearsOfService), ConditionValue, EntitledDays, EffectiveDate, ExpiryDate\n3. Implement ILeaveTypeRepository and IEntitlementRuleRepository interfaces\n4. Create concrete repository implementations with CRUD operations\n5. Implement LeaveTypeService and EntitlementRuleService with business logic\n6. Set up dependency injection for repositories and services",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "1. Unit test repository methods using in-memory database\n2. Test service methods with mocked repositories\n3. Verify CRUD operations work correctly for both entities\n4. Test relationship between LeaveType and EntitlementRule entities"
           },
           {
@@ -183,7 +183,7 @@
               1
             ],
             "details": "1. Create LeaveTypeController with actions for Index, Create, Edit, Details, and Delete\n2. Implement view models for LeaveType with validation attributes\n3. Create views for listing, creating, editing, and viewing leave types\n4. Add form elements for RequiresDoc and AllowHalfDay options\n5. Implement client and server-side validation\n6. Add confirmation dialogs for delete operations\n7. Implement search and filtering functionality\n8. Add audit logging for all leave type changes",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "1. Unit test controller actions with mocked services\n2. Test validation rules for leave type properties\n3. Integration test the full request cycle\n4. UI testing for form submission and validation\n5. Verify audit logs are created for all operations"
           },
           {
@@ -195,7 +195,7 @@
               2
             ],
             "details": "1. Create EntitlementRuleController with CRUD actions\n2. Implement view models for EntitlementRule with validation\n3. Develop UI for creating and managing entitlement rules\n4. Create condition builder interface for years of service and other criteria\n5. Implement rule evaluation engine to calculate entitlements based on conditions\n6. Add support for multiple conditions per leave type\n7. Create rule priority handling for overlapping conditions\n8. Implement audit logging for entitlement rule changes",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "1. Unit test rule evaluation engine with various conditions\n2. Test edge cases for condition evaluation\n3. Integration test the rule configuration UI\n4. Verify rules are correctly applied based on employee attributes\n5. Test audit logging for rule changes"
           },
           {
@@ -207,7 +207,7 @@
               3
             ],
             "details": "1. Extend LeaveType and EntitlementRule models with EffectiveDate and ExpiryDate fields\n2. Implement version management logic to handle overlapping policy periods\n3. Create UI for setting effective dates when creating/editing policies\n4. Develop service methods to retrieve applicable policies for a given date\n5. Implement policy transition handling for employees\n6. Add validation to prevent policy gaps or conflicts\n7. Create policy history view to see changes over time\n8. Implement audit logging for policy version changes",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "1. Test retrieval of correct policy version based on date\n2. Verify validation prevents invalid date ranges\n3. Test policy transition handling for employees\n4. Integration test the versioning UI\n5. Verify audit logs capture version changes correctly"
           },
           {
@@ -219,7 +219,7 @@
               4
             ],
             "details": "1. Create LeaveBalanceService to calculate current and projected balances\n2. Implement calculation logic based on entitlement rules, service years, and leave usage\n3. Develop caching strategy for balance calculations\n4. Create EmployeeLeaveBalanceController and views\n5. Implement UI components to display current balances, used leave, and remaining leave\n6. Add historical balance view for previous periods\n7. Create balance projections for future dates\n8. Implement balance recalculation triggers for relevant system events\n9. Add export functionality for balance reports",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "1. Unit test balance calculation with various scenarios\n2. Test balance updates after leave requests are approved/rejected\n3. Verify balance calculations respect policy versions\n4. Test balance projections for accuracy\n5. Integration test the balance display UI\n6. Performance test balance calculations with large datasets"
           }
         ]
@@ -235,7 +235,7 @@
           3,
           5
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -249,7 +249,7 @@
           4,
           6
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -263,7 +263,7 @@
           3,
           6
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -298,7 +298,7 @@
           8,
           9
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       }
     ],
