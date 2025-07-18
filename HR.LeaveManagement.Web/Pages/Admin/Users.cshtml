@@ -1,0 +1,292 @@
+@page
+@model HR.LeaveManagement.Web.Pages.Admin.UsersModel
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1>User Management</h1>
+                    <p class="text-muted">Manage system users and their roles</p>
+                </div>
+                <div>
+                    <a href="/Admin/Users/Create" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i> Add New User
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="text-primary">@Model.UserStatistics.TotalUsers</h3>
+                    <p class="mb-0">Total Users</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="text-success">@Model.UserStatistics.ActiveUsers</h3>
+                    <p class="mb-0">Active Users</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="text-warning">@Model.UserStatistics.AdminUsers</h3>
+                    <p class="mb-0">Admin Users</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="text-info">@Model.UserStatistics.NewUsersThisMonth</h3>
+                    <p class="mb-0">New This Month</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filter -->
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <form method="get" class="d-flex">
+                <input type="search" name="searchTerm" value="@Model.SearchTerm" placeholder="Search users..." class="form-control me-2">
+                <button type="submit" class="btn btn-outline-primary">Search</button>
+            </form>
+        </div>
+        <div class="col-md-6 text-end">
+            <div class="btn-group" role="group">
+                <a href="/Admin/Users?status=all" class="btn btn-outline-secondary @(Model.StatusFilter == "all" ? "active" : "")">All</a>
+                <a href="/Admin/Users?status=active" class="btn btn-outline-success @(Model.StatusFilter == "active" ? "active" : "")">Active</a>
+                <a href="/Admin/Users?status=inactive" class="btn btn-outline-danger @(Model.StatusFilter == "inactive" ? "active" : "")">Inactive</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>System Users (@Model.Users.Count)</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Users.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Department</th>
+                                        <th>Status</th>
+                                        <th>Last Login</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var user in Model.Users)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="me-3">
+                                                        <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                                            @(user.FullName?.FirstOrDefault() ?? 'U')
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <strong>@user.FullName</strong>
+                                                        <br><small class="text-muted">@user.UserName</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>@user.Email</td>
+                                            <td>
+                                                <span class="badge bg-@(user.Role == "System Admin" ? "danger" : user.Role == "HR Admin" ? "warning" : user.Role == "Line Manager" ? "info" : "secondary")">
+                                                    @user.Role
+                                                </span>
+                                            </td>
+                                            <td>@user.Department</td>
+                                            <td>
+                                                @if (user.IsActive)
+                                                {
+                                                    <span class="badge bg-success">Active</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-danger">Inactive</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (user.LastLoginAt.HasValue)
+                                                {
+                                                    <small>@user.LastLoginAt.Value.ToString("MMM dd, yyyy")</small>
+                                                }
+                                                else
+                                                {
+                                                    <small class="text-muted">Never</small>
+                                                }
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <button class="btn btn-sm btn-outline-primary" onclick="editUser('@user.Id')">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-outline-@(user.IsActive ? "warning" : "success")" onclick="toggleUserStatus('@user.Id', @user.IsActive.ToString().ToLower())">
+                                                        <i class="fas fa-@(user.IsActive ? "ban" : "check")"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-outline-info" onclick="resetPassword('@user.Id')">
+                                                        <i class="fas fa-key"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No users found</h5>
+                            <p class="text-muted">No users match your search criteria.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Role Distribution Chart -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Role Distribution</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="roleChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>User Activity</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            Users logged in today
+                            <span class="badge bg-primary rounded-pill">@Model.UserStatistics.LoggedInToday</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            Users logged in this week
+                            <span class="badge bg-success rounded-pill">@Model.UserStatistics.LoggedInThisWeek</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            Never logged in
+                            <span class="badge bg-warning rounded-pill">@Model.UserStatistics.NeverLoggedIn</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="editUserBody">
+                Loading...
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Role distribution chart
+    var ctx = document.getElementById('roleChart').getContext('2d');
+    var roleChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['System Admin', 'HR Admin', 'Line Manager', 'Employee'],
+            datasets: [{
+                data: [@Model.RoleDistribution.SystemAdmin, @Model.RoleDistribution.HRAdmin, @Model.RoleDistribution.LineManager, @Model.RoleDistribution.Employee],
+                backgroundColor: [
+                    '#dc3545',
+                    '#ffc107',
+                    '#17a2b8',
+                    '#6c757d'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+    function editUser(userId) {
+        // Load user details and show modal
+        fetch(`/Admin/Users/Edit?id=${userId}`)
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('editUserBody').innerHTML = html;
+                var modal = new bootstrap.Modal(document.getElementById('editUserModal'));
+                modal.show();
+            });
+    }
+
+    function toggleUserStatus(userId, isActive) {
+        var action = isActive ? 'deactivate' : 'activate';
+        if (confirm(`Are you sure you want to ${action} this user?`)) {
+            fetch(`/Admin/Users/ToggleStatus?id=${userId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                });
+        }
+    }
+
+    function resetPassword(userId) {
+        if (confirm('Are you sure you want to reset this user\'s password?')) {
+            fetch(`/Admin/Users/ResetPassword?id=${userId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Password reset successfully. New password: ' + data.newPassword);
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                });
+        }
+    }
+</script>

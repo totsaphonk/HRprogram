@@ -1,0 +1,195 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "HR Leave Management System";
+}
+
+<div class="text-center">
+    <h1 class="display-4">HR Leave Management System</h1>
+    <p>Welcome to the HR Leave Management System - Project Progress Dashboard</p>
+    
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Task 1: Project Setup</h5>
+                    <p class="card-text">✅ .NET Web Application created</p>
+                    <p class="card-text">✅ Basic project structure ready</p>
+                    <span class="badge bg-success">Completed</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Task 2: Database Schema</h5>
+                    <p class="card-text">✅ Entity models created</p>
+                    <p class="card-text">✅ Database migration completed</p>
+                    <span class="badge bg-success">Completed</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Task 3: Authentication</h5>
+                    <p class="card-text">✅ ASP.NET Identity configured</p>
+                    <p class="card-text">✅ User roles created</p>
+                    <span class="badge bg-success">Completed</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Task 4: Organization</h5>
+                    <p class="card-text">✅ Employee management pages</p>
+                    <p class="card-text">✅ Department management pages</p>
+                    <span class="badge bg-success">Completed</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Task 5: Leave Management</h5>
+                    <p class="card-text">✅ Leave type management</p>
+                    <p class="card-text">✅ Entitlement rules engine</p>
+                    <span class="badge bg-success">Completed</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Task 6: Leave Workflow</h5>
+                    <p class="card-text">✅ Leave application system</p>
+                    <p class="card-text">✅ Approval workflow</p>
+                    <span class="badge bg-success">Completed</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">System Progress</h5>
+                    <p class="card-text">🎯 Building a comprehensive HR Leave Management System</p>
+                    <div class="progress mb-2">
+                        <div class="progress-bar bg-success" style="width: 100%">100% Complete</div>
+                    </div>
+                    <p class="small text-muted">All major tasks completed! 🎉</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Task 7: Calendar & Holidays</h5>
+                    <p class="card-text">✅ Public holiday management</p>
+                    <p class="card-text">✅ Calendar view with export</p>
+                    <span class="badge bg-success">Completed</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Task 8: Notifications</h5>
+                    <p class="card-text">✅ Email notification system</p>
+                    <p class="card-text">✅ Alert management</p>
+                    <span class="badge bg-success">Completed</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Task 10: System Admin</h5>
+                    <p class="card-text">✅ Admin dashboard</p>
+                    <p class="card-text">✅ User management</p>
+                    <span class="badge bg-success">Completed</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Recent Updates</h5>
+                    <p class="card-text">🎛️ System administration</p>
+                    <p class="card-text">👥 User management</p>
+                    <p class="card-text">⚙️ System settings</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <a href="/Employees" class="btn btn-primary w-100 mb-2">Employees</a>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="/Departments" class="btn btn-primary w-100 mb-2">Departments</a>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="/LeaveTypes" class="btn btn-info w-100 mb-2">Leave Types</a>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="/EntitlementRules" class="btn btn-info w-100 mb-2">Entitlement Rules</a>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="/LeaveBalances" class="btn btn-warning w-100 mb-2">Leave Balances</a>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="/LeaveRequests" class="btn btn-success w-100 mb-2">Leave Requests</a>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-2">
+                            <a href="/Calendar" class="btn btn-info w-100 mb-2">Team Calendar</a>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="/PublicHolidays" class="btn btn-warning w-100 mb-2">Public Holidays</a>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="/Notifications" class="btn btn-secondary w-100 mb-2">Notifications</a>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="/Admin/Dashboard" class="btn btn-dark w-100 mb-2">Admin Dashboard</a>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-muted">System administration and management</small>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-3">
+                            <a href="/LeaveRequests/Apply" class="btn btn-outline-success w-100 mb-2">Apply for Leave</a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="/Identity/Account/Register" class="btn btn-outline-primary w-100 mb-2">Register User</a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="/Identity/Account/Login" class="btn btn-outline-secondary w-100 mb-2">Login</a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="/Identity/Account/Logout" class="btn btn-outline-danger w-100 mb-2">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

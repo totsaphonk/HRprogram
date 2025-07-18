@@ -1,0 +1,118 @@
+📝 Product Requirements Document (PRD)
+Project Name: HR Leave Management System
+Platform: .NET C# Web Application
+Database: SQLite
+UI Style: Modern, responsive web app
+Prepared by: Solution Architect (SA)
+Date: 18 July 2025
+
+1. 📌 Purpose & Objectives
+The HR Leave Management System is a flexible, modern application designed to help organizations manage all aspects of employee leave — including entitlement rules, approval workflows, and recordkeeping. The system allows HR personnel and administrators to set up policies, assign roles, and adjust leave rules without requiring system developers, ensuring agility and long-term maintainability.
+
+2. 🧑‍💼 User Roles
+Role	Description
+Employee	Request leave, view leave balance and history
+Line Manager	Approve or reject leave requests submitted by subordinates
+HR Admin	Manage leave types, leave rules, public holidays, and reports
+System Admin	Manage users, assign roles, configure global system settings
+
+3. 🧩 Functional Requirements (FR)
+Code	Function	Description
+FR-01	Organization Structure	Define and maintain departments, units, and reporting relationships
+FR-02	Role-Based Access Control	Users are granted access by their assigned role (Employee, Manager, HR, Admin)
+FR-03	Employee Master Data	Store and manage employee records such as name, department, join date, and employment type
+FR-04	Leave Type Management	HR/Admin can create, edit, and disable various leave types (e.g., sick, annual, errand)
+FR-05	Leave Entitlement Engine	Define and apply rules for leave entitlements based on years of service, employment type, or other conditions
+FR-06	Leave Application (Full/Half Day)	Employees can apply for leave with options for full-day or half-day
+FR-07	Approval Workflow Setup	HR/Admin can configure multi-step approval flows per department or leave type
+FR-08	Leave Approval Process	Approvers can approve, reject, or return leave requests with comments
+FR-09	Leave Balance Calculation	System calculates available leave dynamically based on policy and usage
+FR-10	Leave History & Audit Trail	All actions (create, approve, reject) are logged and viewable historically
+FR-11	Public Holiday Setup	HR/Admin can define holidays by year and region to exclude from leave count
+FR-12	Team Calendar	Visual calendar showing all team member leaves in color-coded format
+FR-13	Notifications & Alerts	Users receive email notifications about request status changes
+FR-14	Reporting & Analytics	Downloadable and filterable reports of leave usage, approvals, balances
+FR-15	Dynamic Form Settings	Admin can enable/disable fields for specific leave types (e.g., file upload)
+FR-16	Self-Service Role Assignment	Admins can assign users to roles without IT support
+FR-17	Leave Policy Versioning	Leave policy changes are tracked with effective dates and audit logs
+
+4. 🧱 Non-Functional Requirements (NFR)
+Code	Area	Requirement
+NFR-01	Usability	Clean and intuitive UI/UX for non-technical users
+NFR-02	Performance	All major functions load in ≤2 seconds
+NFR-03	Security	Role-based access, user authentication, and encryption
+NFR-04	Auditability	System logs all create/edit/delete actions with timestamps
+NFR-05	Configurability	HR/Admin can set up leave types, rules, and workflows
+NFR-06	Localization	Multi-language support: Thai and English toggleable
+
+5. 🛠 Technical Stack
+Component	Technology
+Frontend	ASP.NET Razor Pages or Blazor WebAssembly
+Backend	.NET 7 or 8 (C#)
+Database		PostgreSQL (via Npgsql for EF Core)
+Authentication	ASP.NET Identity
+Styling	Tailwind CSS or Bootstrap
+Notification	SMTP / SendGrid
+Version Control	Git
+
+6. ✅ Development Tasklist (Best Practice – Development Phase Only)
+🏁 A. Environment Preparation
+Code	Task Description
+ENV-01	Initialize Git repository and configure Git ignore rules
+ENV-02	Create project using .NET 7/8 Web App template
+ENV-03	Install and configure NuGet packages (EF Core, Identity, SQLite)
+ENV-04	Setup database connection string and DbContext
+ENV-05	Configure frontend framework (Tailwind CSS or Bootstrap)
+ENV-06	Set up development and testing environments (local)
+
+🎨 B. UI/UX & Component Design
+Code	Task Description
+UI-01	Design wireframes for Leave Request, Approval, Calendar, Admin Pages
+UI-02	Create layout templates (Header, Sidebar, Footer)
+UI-03	Build reusable UI components (Buttons, Modals, Tables, Forms)
+UI-04	Develop responsive layout using grid system
+UI-05	Implement consistent theme, spacing, and icons
+
+🧱 C. Database & Model Design
+Code	Task Description
+DB-01	Create Entity-Relationship Diagram (ERD)
+DB-02	Define and implement models (Employee, LeaveType, LeaveRequest, EntitlementRule)
+DB-03	Use EF Core migrations to create database schema
+DB-04	Create seed data for testing users and leave types
+DB-05	Test basic CRUD operations through services/repositories
+
+🔐 D. Core Features Development
+Module	Task Description
+Authentication	Implement registration, login, forgot password
+Role Management	Create Admin UI for assigning/removing user roles
+Leave Type Management	UI and backend for managing leave types
+Leave Entitlement Rules	Implement rules engine based on years of service and other conditions
+Leave Application	Allow employees to submit leave requests
+Approval Workflow	Multi-step approval with comments and status tracking
+Leave Balance	Auto-calculate remaining leave for each type
+Leave History	Page to display employee's past leave requests
+Calendar View	Team calendar with filters (department, leave type)
+Public Holiday Setup	Admin UI to configure annual holidays by location
+Notification	Email notifications for leave actions (submit/approve/reject)
+
+🧪 E. Developer-Side Testing
+Code	Task Description
+QA-01	Write unit tests for critical logic (leave balance, rule engine)
+QA-02	Conduct integration testing for multi-step workflows
+QA-03	Validate form input and error states
+QA-04	Perform role-based access testing using test accounts
+QA-05	Test mobile and tablet layout rendering
+QA-06	Use tools like Postman to verify backend API responses
+
+7. 📄 Key Data Tables (Sample)
+Employee Table
+EmployeeID, FullName, Department, JoinDate, Role, Email, ActiveStatus
+
+LeaveType Table
+LeaveTypeID, Name, RequiresDoc, AllowHalfDay, Description
+
+LeaveRequest Table
+RequestID, EmployeeID, LeaveTypeID, FromDate, ToDate, Duration, Reason, Status, CreatedAt, ApprovedBy, Comments
+
+EntitlementRule Table
+RuleID, LeaveTypeID, Condition (e.g., YearsOfService >= 5), EntitledDays

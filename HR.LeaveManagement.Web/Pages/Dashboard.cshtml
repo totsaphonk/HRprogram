@@ -1,0 +1,310 @@
+@page
+@model HR.LeaveManagement.Web.Pages.DashboardModel
+@using Microsoft.AspNetCore.Identity
+@using HR.LeaveManagement.Web.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "_DashboardLayout";
+}
+
+<div class="dashboard-content">
+    <!-- Welcome Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="welcome-header">
+                <h2>Welcome back, @Model.CurrentUser?.FullName!</h2>
+                <p class="text-muted">Here's what's happening with your HR Leave Management System today.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card stat-card bg-primary text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="text-white-75 small">Total Employees</div>
+                            <div class="text-lg fw-bold">@Model.Statistics.TotalEmployees</div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="/Employees">View Details</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card stat-card bg-warning text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="text-white-75 small">Pending Requests</div>
+                            <div class="text-lg fw-bold">@Model.Statistics.PendingRequests</div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-clock fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="/LeaveRequests">View Details</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card stat-card bg-success text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="text-white-75 small">Approved Today</div>
+                            <div class="text-lg fw-bold">@Model.Statistics.ApprovedToday</div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="/LeaveRequests">View Details</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card stat-card bg-info text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <div class="text-white-75 small">Notifications</div>
+                            <div class="text-lg fw-bold">@Model.Statistics.TotalNotifications</div>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-bell fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="/Notifications">View Details</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activities and Quick Actions -->
+    <div class="row">
+        <div class="col-xl-8 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h6 class="m-0 fw-bold text-primary">Recent Activities</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Activity</th>
+                                    <th>User</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var activity in Model.RecentActivities.Take(8))
+                                {
+                                    <tr>
+                                        <td><small class="text-muted">@activity.Timestamp.ToString("HH:mm")</small></td>
+                                        <td>@activity.Description</td>
+                                        <td>@activity.UserName</td>
+                                        <td>
+                                            @if (activity.Status == "Success")
+                                            {
+                                                <span class="badge bg-success">Success</span>
+                                            }
+                                            else if (activity.Status == "Warning")
+                                            {
+                                                <span class="badge bg-warning">Warning</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger">Error</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h6 class="m-0 fw-bold text-primary">Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="/LeaveRequests/Apply" class="btn btn-primary">
+                            <i class="fas fa-plus-circle me-2"></i>Apply for Leave
+                        </a>
+                        <a href="/LeaveRequests" class="btn btn-outline-primary">
+                            <i class="fas fa-list me-2"></i>View Leave Requests
+                        </a>
+                        <a href="/Calendar" class="btn btn-outline-info">
+                            <i class="fas fa-calendar me-2"></i>Team Calendar
+                        </a>
+                        <a href="/LeaveBalances" class="btn btn-outline-success">
+                            <i class="fas fa-chart-bar me-2"></i>Leave Balances
+                        </a>
+                        @if (Model.CurrentUser?.Role == "System Admin" || Model.CurrentUser?.Role == "HR Admin")
+                        {
+                            <hr class="my-3">
+                            <a href="/Admin/Dashboard" class="btn btn-outline-dark">
+                                <i class="fas fa-cog me-2"></i>Admin Dashboard
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leave Statistics Chart -->
+    <div class="row">
+        <div class="col-xl-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h6 class="m-0 fw-bold text-primary">Leave Requests This Month</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="leaveChart" width="100%" height="50"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h6 class="m-0 fw-bold text-primary">Your Leave Balance</h6>
+                </div>
+                <div class="card-body">
+                    @if (Model.UserLeaveBalances.Any())
+                    {
+                        <div class="row">
+                            @foreach (var balance in Model.UserLeaveBalances)
+                            {
+                                <div class="col-6 mb-3">
+                                    <div class="text-center">
+                                        <div class="h4 mb-0 text-primary">@balance.AvailableDays</div>
+                                        <div class="small text-muted">@balance.LeaveTypeName</div>
+                                        <div class="progress mt-2" style="height: 6px;">
+                                            <div class="progress-bar" role="progressbar" style="width: @(((double)balance.AvailableDays / balance.TotalDays) * 100)%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted text-center">No leave balance information available.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.dashboard-content {
+    padding: 0;
+}
+
+.welcome-header {
+    background: linear-gradient(90deg, #4e73df 0%, #224abe 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 0.375rem;
+    margin-bottom: 1rem;
+}
+
+.stat-card {
+    border: none;
+    border-radius: 0.375rem;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(33, 40, 50, 0.15);
+    transition: all 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.25rem 2rem 0 rgba(33, 40, 50, 0.25);
+}
+
+.stat-icon {
+    opacity: 0.3;
+}
+
+.text-lg {
+    font-size: 2rem;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(33, 40, 50, 0.15);
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.075);
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Leave requests chart
+var ctx = document.getElementById('leaveChart').getContext('2d');
+var leaveChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+        datasets: [{
+            label: 'Leave Requests',
+            data: [@Model.ChartData.Week1, @Model.ChartData.Week2, @Model.ChartData.Week3, @Model.ChartData.Week4],
+            borderColor: '#4e73df',
+            backgroundColor: 'rgba(78, 115, 223, 0.1)',
+            borderWidth: 2,
+            fill: true
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1
+                }
+            }
+        }
+    }
+});
+</script>

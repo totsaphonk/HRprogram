@@ -1,0 +1,355 @@
+@page
+@model HR.LeaveManagement.Web.Pages.Admin.SettingsModel
+@{
+    ViewData["Title"] = "System Settings";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1>System Settings</h1>
+            <p class="text-muted">Configure system-wide settings and preferences</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <button class="nav-link active" id="v-pills-general-tab" data-bs-toggle="pill" data-bs-target="#v-pills-general" type="button" role="tab">
+                    <i class="fas fa-cog"></i> General Settings
+                </button>
+                <button class="nav-link" id="v-pills-email-tab" data-bs-toggle="pill" data-bs-target="#v-pills-email" type="button" role="tab">
+                    <i class="fas fa-envelope"></i> Email Settings
+                </button>
+                <button class="nav-link" id="v-pills-leave-tab" data-bs-toggle="pill" data-bs-target="#v-pills-leave" type="button" role="tab">
+                    <i class="fas fa-calendar-alt"></i> Leave Settings
+                </button>
+                <button class="nav-link" id="v-pills-notification-tab" data-bs-toggle="pill" data-bs-target="#v-pills-notification" type="button" role="tab">
+                    <i class="fas fa-bell"></i> Notifications
+                </button>
+                <button class="nav-link" id="v-pills-security-tab" data-bs-toggle="pill" data-bs-target="#v-pills-security" type="button" role="tab">
+                    <i class="fas fa-shield-alt"></i> Security
+                </button>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="tab-content" id="v-pills-tabContent">
+                
+                <!-- General Settings -->
+                <div class="tab-pane fade show active" id="v-pills-general" role="tabpanel">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>General Settings</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" asp-page-handler="SaveGeneral">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Company Name</label>
+                                            <input type="text" class="form-control" name="CompanyName" value="@Model.Settings.CompanyName" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">System Title</label>
+                                            <input type="text" class="form-control" name="SystemTitle" value="@Model.Settings.SystemTitle" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Time Zone</label>
+                                            <select class="form-select" name="TimeZone">
+                                                <option value="UTC">UTC</option>
+                                                <option value="EST">Eastern Time</option>
+                                                <option value="PST">Pacific Time</option>
+                                                <option value="GMT">Greenwich Mean Time</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Date Format</label>
+                                            <select class="form-select" name="DateFormat">
+                                                <option value="MM/dd/yyyy">MM/dd/yyyy</option>
+                                                <option value="dd/MM/yyyy">dd/MM/yyyy</option>
+                                                <option value="yyyy-MM-dd">yyyy-MM-dd</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Company Logo URL</label>
+                                    <input type="url" class="form-control" name="LogoUrl" value="@Model.Settings.LogoUrl">
+                                    <small class="form-text text-muted">Leave blank to use default logo</small>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="MaintenanceMode" id="maintenanceMode" value="true" @(Model.Settings.MaintenanceMode ? "checked" : "")>
+                                        <label class="form-check-label" for="maintenanceMode">
+                                            Enable Maintenance Mode
+                                        </label>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save General Settings</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email Settings -->
+                <div class="tab-pane fade" id="v-pills-email" role="tabpanel">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Email Settings</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" asp-page-handler="SaveEmail">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">SMTP Server</label>
+                                            <input type="text" class="form-control" name="SmtpHost" value="@Model.Settings.SmtpHost" placeholder="smtp.gmail.com">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">SMTP Port</label>
+                                            <input type="number" class="form-control" name="SmtpPort" value="@Model.Settings.SmtpPort" placeholder="587">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Username</label>
+                                            <input type="text" class="form-control" name="SmtpUsername" value="@Model.Settings.SmtpUsername">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Password</label>
+                                            <input type="password" class="form-control" name="SmtpPassword" value="@Model.Settings.SmtpPassword">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">From Email</label>
+                                            <input type="email" class="form-control" name="FromEmail" value="@Model.Settings.FromEmail" placeholder="noreply@company.com">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">From Name</label>
+                                            <input type="text" class="form-control" name="FromName" value="@Model.Settings.FromName" placeholder="HR Leave Management">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="EnableSsl" id="enableSsl" value="true" @(Model.Settings.EnableSsl ? "checked" : "")>
+                                        <label class="form-check-label" for="enableSsl">
+                                            Enable SSL
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="EmailEnabled" id="emailEnabled" value="true" @(Model.Settings.EmailEnabled ? "checked" : "")>
+                                        <label class="form-check-label" for="emailEnabled">
+                                            Enable Email Notifications
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary">Save Email Settings</button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="testEmail()">Test Email</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Leave Settings -->
+                <div class="tab-pane fade" id="v-pills-leave" role="tabpanel">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Leave Settings</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" asp-page-handler="SaveLeave">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Default Annual Leave Days</label>
+                                            <input type="number" class="form-control" name="DefaultAnnualLeaveDays" value="@Model.Settings.DefaultAnnualLeaveDays" min="0" max="365">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Default Sick Leave Days</label>
+                                            <input type="number" class="form-control" name="DefaultSickLeaveDays" value="@Model.Settings.DefaultSickLeaveDays" min="0" max="365">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Advance Notice Required (days)</label>
+                                            <input type="number" class="form-control" name="AdvanceNoticeRequired" value="@Model.Settings.AdvanceNoticeRequired" min="0" max="90">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Max Consecutive Leave Days</label>
+                                            <input type="number" class="form-control" name="MaxConsecutiveLeaveDays" value="@Model.Settings.MaxConsecutiveLeaveDays" min="1" max="365">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="AllowWeekendLeave" id="allowWeekendLeave" value="true" @(Model.Settings.AllowWeekendLeave ? "checked" : "")>
+                                        <label class="form-check-label" for="allowWeekendLeave">
+                                            Allow Weekend Leave Requests
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="RequireManagerApproval" id="requireManagerApproval" value="true" @(Model.Settings.RequireManagerApproval ? "checked" : "")>
+                                        <label class="form-check-label" for="requireManagerApproval">
+                                            Require Manager Approval for All Leave Requests
+                                        </label>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save Leave Settings</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notification Settings -->
+                <div class="tab-pane fade" id="v-pills-notification" role="tabpanel">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Notification Settings</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" asp-page-handler="SaveNotification">
+                                <div class="mb-3">
+                                    <label class="form-label">Notification Types</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="NotifyOnLeaveSubmission" id="notifyOnLeaveSubmission" value="true" @(Model.Settings.NotifyOnLeaveSubmission ? "checked" : "")>
+                                        <label class="form-check-label" for="notifyOnLeaveSubmission">
+                                            Notify HR when leave requests are submitted
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="NotifyOnLeaveApproval" id="notifyOnLeaveApproval" value="true" @(Model.Settings.NotifyOnLeaveApproval ? "checked" : "")>
+                                        <label class="form-check-label" for="notifyOnLeaveApproval">
+                                            Notify employees when leave requests are approved/rejected
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="SendReminders" id="sendReminders" value="true" @(Model.Settings.SendReminders ? "checked" : "")>
+                                        <label class="form-check-label" for="sendReminders">
+                                            Send reminders for pending leave requests
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Reminder Frequency (hours)</label>
+                                            <input type="number" class="form-control" name="ReminderFrequency" value="@Model.Settings.ReminderFrequency" min="1" max="72">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Reminder After (days)</label>
+                                            <input type="number" class="form-control" name="ReminderAfterDays" value="@Model.Settings.ReminderAfterDays" min="1" max="30">
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save Notification Settings</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Settings -->
+                <div class="tab-pane fade" id="v-pills-security" role="tabpanel">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Security Settings</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" asp-page-handler="SaveSecurity">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Session Timeout (minutes)</label>
+                                            <input type="number" class="form-control" name="SessionTimeout" value="@Model.Settings.SessionTimeout" min="5" max="1440">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Password Minimum Length</label>
+                                            <input type="number" class="form-control" name="PasswordMinLength" value="@Model.Settings.PasswordMinLength" min="6" max="20">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="RequirePasswordComplexity" id="requirePasswordComplexity" value="true" @(Model.Settings.RequirePasswordComplexity ? "checked" : "")>
+                                        <label class="form-check-label" for="requirePasswordComplexity">
+                                            Require Password Complexity (uppercase, lowercase, numbers, symbols)
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="EnableAuditLog" id="enableAuditLog" value="true" @(Model.Settings.EnableAuditLog ? "checked" : "")>
+                                        <label class="form-check-label" for="enableAuditLog">
+                                            Enable Audit Logging
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="EnableTwoFactorAuth" id="enableTwoFactorAuth" value="true" @(Model.Settings.EnableTwoFactorAuth ? "checked" : "")>
+                                        <label class="form-check-label" for="enableTwoFactorAuth">
+                                            Enable Two-Factor Authentication
+                                        </label>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save Security Settings</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function testEmail() {
+        fetch('/Admin/Settings/TestEmail', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Test email sent successfully!');
+                } else {
+                    alert('Failed to send test email: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Error sending test email: ' + error.message);
+            });
+    }
+</script>

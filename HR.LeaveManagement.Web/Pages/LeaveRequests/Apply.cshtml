@@ -1,0 +1,173 @@
+@page
+@model HR.LeaveManagement.Web.Pages.LeaveRequests.ApplyModel
+@{
+    ViewData["Title"] = "Apply for Leave";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h2>Apply for Leave</h2>
+            <p class="text-muted">Submit your leave application for approval</p>
+            
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="LeaveRequest.EmployeeID" class="form-label">Employee</label>
+                            <select asp-for="LeaveRequest.EmployeeID" class="form-control">
+                                <option value="">Select Employee</option>
+                                @foreach (var employee in Model.Employees)
+                                {
+                                    <option value="@employee.EmployeeID">@employee.FullName (@employee.Department)</option>
+                                }
+                            </select>
+                            <span asp-validation-for="LeaveRequest.EmployeeID" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="LeaveRequest.LeaveTypeID" class="form-label">Leave Type</label>
+                            <select asp-for="LeaveRequest.LeaveTypeID" class="form-control" id="leaveTypeSelect">
+                                <option value="">Select Leave Type</option>
+                                @foreach (var leaveType in Model.LeaveTypes)
+                                {
+                                    <option value="@leaveType.LeaveTypeID" 
+                                            data-requires-doc="@leaveType.RequiresDoc.ToString().ToLower()"
+                                            data-allow-half-day="@leaveType.AllowHalfDay.ToString().ToLower()">
+                                        @leaveType.Name
+                                    </option>
+                                }
+                            </select>
+                            <span asp-validation-for="LeaveRequest.LeaveTypeID" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="LeaveRequest.FromDate" class="form-label">From Date</label>
+                            <input asp-for="LeaveRequest.FromDate" class="form-control" type="date" id="fromDate" />
+                            <span asp-validation-for="LeaveRequest.FromDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="LeaveRequest.ToDate" class="form-label">To Date</label>
+                            <input asp-for="LeaveRequest.ToDate" class="form-control" type="date" id="toDate" />
+                            <span asp-validation-for="LeaveRequest.ToDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="LeaveRequest.Duration" class="form-label">Duration (Days)</label>
+                            <input asp-for="LeaveRequest.Duration" class="form-control" type="number" min="0.5" max="365" step="0.5" id="duration" readonly />
+                            <span asp-validation-for="LeaveRequest.Duration" class="text-danger"></span>
+                            <div class="form-text">Duration will be calculated automatically based on selected dates</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3" id="halfDayDiv" style="display: none;">
+                            <label class="form-label">Half Day Option</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="isHalfDay" />
+                                <label class="form-check-label" for="isHalfDay">
+                                    This is a half-day leave
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="LeaveRequest.Reason" class="form-label">Reason for Leave</label>
+                    <textarea asp-for="LeaveRequest.Reason" class="form-control" rows="4" placeholder="Please provide a detailed reason for your leave application"></textarea>
+                    <span asp-validation-for="LeaveRequest.Reason" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3" id="documentDiv" style="display: none;">
+                    <label class="form-label">Supporting Document</label>
+                    <input type="file" class="form-control" id="document" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" />
+                    <div class="form-text">This leave type requires supporting documentation</div>
+                </div>
+                
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h6 class="card-title">Leave Balance Information</h6>
+                        <div id="balanceInfo" class="text-muted">
+                            Select an employee and leave type to view available balance
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Submit Application</button>
+                    <a class="btn btn-secondary" asp-page="Index">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const leaveTypeSelect = document.getElementById('leaveTypeSelect');
+            const fromDate = document.getElementById('fromDate');
+            const toDate = document.getElementById('toDate');
+            const duration = document.getElementById('duration');
+            const halfDayDiv = document.getElementById('halfDayDiv');
+            const documentDiv = document.getElementById('documentDiv');
+            const isHalfDay = document.getElementById('isHalfDay');
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            fromDate.min = today;
+            toDate.min = today;
+            
+            leaveTypeSelect.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                const requiresDoc = selectedOption.getAttribute('data-requires-doc') === 'true';
+                const allowHalfDay = selectedOption.getAttribute('data-allow-half-day') === 'true';
+                
+                documentDiv.style.display = requiresDoc ? 'block' : 'none';
+                halfDayDiv.style.display = allowHalfDay ? 'block' : 'none';
+                
+                calculateDuration();
+            });
+            
+            fromDate.addEventListener('change', function() {
+                toDate.min = this.value;
+                if (toDate.value && toDate.value < this.value) {
+                    toDate.value = this.value;
+                }
+                calculateDuration();
+            });
+            
+            toDate.addEventListener('change', calculateDuration);
+            isHalfDay.addEventListener('change', calculateDuration);
+            
+            function calculateDuration() {
+                if (fromDate.value && toDate.value) {
+                    const from = new Date(fromDate.value);
+                    const to = new Date(toDate.value);
+                    const timeDiff = to.getTime() - from.getTime();
+                    let days = (timeDiff / (1000 * 3600 * 24)) + 1;
+                    
+                    if (isHalfDay.checked && days === 1) {
+                        days = 0.5;
+                    }
+                    
+                    duration.value = days;
+                }
+            }
+        });
+    </script>
+}

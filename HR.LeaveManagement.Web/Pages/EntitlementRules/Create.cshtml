@@ -1,0 +1,92 @@
+@page
+@model HR.LeaveManagement.Web.Pages.EntitlementRules.CreateModel
+@{
+    ViewData["Title"] = "Create Entitlement Rule";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h2>Create New Entitlement Rule</h2>
+            
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <div class="mb-3">
+                    <label asp-for="EntitlementRule.LeaveTypeID" class="form-label">Leave Type</label>
+                    <select asp-for="EntitlementRule.LeaveTypeID" class="form-control">
+                        <option value="">Select Leave Type</option>
+                        @foreach (var leaveType in Model.LeaveTypes)
+                        {
+                            <option value="@leaveType.LeaveTypeID">@leaveType.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="EntitlementRule.LeaveTypeID" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="EntitlementRule.Condition" class="form-label">Condition</label>
+                    <select asp-for="EntitlementRule.Condition" class="form-control" id="conditionSelect">
+                        <option value="">Select Condition</option>
+                        <option value="YearsOfService >= 0">All employees (0+ years)</option>
+                        <option value="YearsOfService >= 1">1+ years of service</option>
+                        <option value="YearsOfService >= 2">2+ years of service</option>
+                        <option value="YearsOfService >= 3">3+ years of service</option>
+                        <option value="YearsOfService >= 5">5+ years of service</option>
+                        <option value="YearsOfService >= 10">10+ years of service</option>
+                        <option value="custom">Custom condition</option>
+                    </select>
+                    <span asp-validation-for="EntitlementRule.Condition" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3" id="customConditionDiv" style="display: none;">
+                    <label for="customCondition" class="form-label">Custom Condition</label>
+                    <input type="text" class="form-control" id="customCondition" placeholder="e.g., YearsOfService >= 7" />
+                    <div class="form-text">
+                        Examples: "YearsOfService >= 7", "Department == 'IT'", "Role == 'Manager'"
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="EntitlementRule.EntitledDays" class="form-label">Entitled Days</label>
+                    <input asp-for="EntitlementRule.EntitledDays" class="form-control" type="number" min="0" max="365" />
+                    <span asp-validation-for="EntitlementRule.EntitledDays" class="text-danger"></span>
+                    <div class="form-text">Number of days employee is entitled to per year for this condition</div>
+                </div>
+                
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                    <a class="btn btn-secondary" asp-page="Index">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById('conditionSelect').addEventListener('change', function() {
+            var customDiv = document.getElementById('customConditionDiv');
+            var customInput = document.getElementById('customCondition');
+            
+            if (this.value === 'custom') {
+                customDiv.style.display = 'block';
+                customInput.required = true;
+            } else {
+                customDiv.style.display = 'none';
+                customInput.required = false;
+                customInput.value = '';
+            }
+        });
+        
+        document.querySelector('form').addEventListener('submit', function(e) {
+            var conditionSelect = document.getElementById('conditionSelect');
+            var customInput = document.getElementById('customCondition');
+            
+            if (conditionSelect.value === 'custom' && customInput.value.trim()) {
+                conditionSelect.value = customInput.value.trim();
+            }
+        });
+    </script>
+}

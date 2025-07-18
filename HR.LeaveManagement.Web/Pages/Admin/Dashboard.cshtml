@@ -1,0 +1,282 @@
+@page
+@model HR.LeaveManagement.Web.Pages.Admin.DashboardModel
+@{
+    ViewData["Title"] = "System Administration Dashboard";
+    Layout = "_DashboardLayout";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1>System Administration Dashboard</h1>
+            <p class="lead">System overview and administrative controls</p>
+        </div>
+    </div>
+
+    <!-- System Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h3 class="mb-0">@Model.Statistics.TotalEmployees</h3>
+                            <p class="mb-0">Total Employees</p>
+                        </div>
+                        <div>
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h3 class="mb-0">@Model.Statistics.TotalLeaveRequests</h3>
+                            <p class="mb-0">Total Leave Requests</p>
+                        </div>
+                        <div>
+                            <i class="fas fa-calendar-alt fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h3 class="mb-0">@Model.Statistics.PendingRequests</h3>
+                            <p class="mb-0">Pending Requests</p>
+                        </div>
+                        <div>
+                            <i class="fas fa-clock fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h3 class="mb-0">@Model.Statistics.TotalNotifications</h3>
+                            <p class="mb-0">Notifications Sent</p>
+                        </div>
+                        <div>
+                            <i class="fas fa-bell fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <a href="/Admin/Users" class="btn btn-primary w-100 mb-2">
+                                <i class="fas fa-user-cog"></i> Manage Users
+                            </a>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="/Admin/Settings" class="btn btn-secondary w-100 mb-2">
+                                <i class="fas fa-cog"></i> System Settings
+                            </a>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="/Admin/Backup" class="btn btn-success w-100 mb-2">
+                                <i class="fas fa-database"></i> Data Backup
+                            </a>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="/Admin/Maintenance" class="btn btn-warning w-100 mb-2">
+                                <i class="fas fa-tools"></i> Maintenance
+                            </a>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="/Admin/Logs" class="btn btn-info w-100 mb-2">
+                                <i class="fas fa-file-alt"></i> System Logs
+                            </a>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="/Admin/Help" class="btn btn-dark w-100 mb-2">
+                                <i class="fas fa-question-circle"></i> Help Center
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity and System Health -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Recent Activity</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Activity</th>
+                                    <th>User</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var activity in Model.RecentActivities)
+                                {
+                                    <tr>
+                                        <td><small>@activity.Timestamp.ToString("HH:mm")</small></td>
+                                        <td>@activity.Description</td>
+                                        <td>@activity.UserName</td>
+                                        <td>
+                                            @if (activity.Status == "Success")
+                                            {
+                                                <span class="badge bg-success">Success</span>
+                                            }
+                                            else if (activity.Status == "Warning")
+                                            {
+                                                <span class="badge bg-warning">Warning</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger">Error</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>System Health</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Database Status</label>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" style="width: 100%">Online</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email Service</label>
+                        <div class="progress">
+                            <div class="progress-bar bg-@(Model.SystemHealth.EmailServiceStatus == "Online" ? "success" : "danger")" style="width: 100%">
+                                @Model.SystemHealth.EmailServiceStatus
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">System Load</label>
+                        <div class="progress">
+                            <div class="progress-bar bg-info" style="width: @Model.SystemHealth.SystemLoad%">
+                                @Model.SystemHealth.SystemLoad%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Disk Usage</label>
+                        <div class="progress">
+                            <div class="progress-bar bg-warning" style="width: @Model.SystemHealth.DiskUsage%">
+                                @Model.SystemHealth.DiskUsage%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <small class="text-muted">Last updated: @DateTime.Now.ToString("HH:mm:ss")</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Configuration -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>System Configuration</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-6">Application Version:</dt>
+                        <dd class="col-sm-6">1.0.0</dd>
+                        
+                        <dt class="col-sm-6">Database Provider:</dt>
+                        <dd class="col-sm-6">SQLite</dd>
+                        
+                        <dt class="col-sm-6">Environment:</dt>
+                        <dd class="col-sm-6">Development</dd>
+                        
+                        <dt class="col-sm-6">Email Notifications:</dt>
+                        <dd class="col-sm-6">
+                            <span class="badge bg-@(Model.SystemHealth.EmailServiceStatus == "Online" ? "success" : "danger")">
+                                @Model.SystemHealth.EmailServiceStatus
+                            </span>
+                        </dd>
+                        
+                        <dt class="col-sm-6">Total Users:</dt>
+                        <dd class="col-sm-6">@Model.Statistics.TotalUsers</dd>
+                        
+                        <dt class="col-sm-6">Uptime:</dt>
+                        <dd class="col-sm-6">@Model.SystemHealth.Uptime</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Today's Summary</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            New Leave Requests
+                            <span class="badge bg-primary rounded-pill">@Model.TodaysSummary.NewLeaveRequests</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Approved Requests
+                            <span class="badge bg-success rounded-pill">@Model.TodaysSummary.ApprovedRequests</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Rejected Requests
+                            <span class="badge bg-danger rounded-pill">@Model.TodaysSummary.RejectedRequests</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Notifications Sent
+                            <span class="badge bg-info rounded-pill">@Model.TodaysSummary.NotificationsSent</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            New Registrations
+                            <span class="badge bg-warning rounded-pill">@Model.TodaysSummary.NewRegistrations</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

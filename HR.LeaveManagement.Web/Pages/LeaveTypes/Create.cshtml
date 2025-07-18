@@ -1,0 +1,58 @@
+@page
+@model HR.LeaveManagement.Web.Pages.LeaveTypes.CreateModel
+@{
+    ViewData["Title"] = "Create Leave Type";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h2>Create New Leave Type</h2>
+            
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <div class="mb-3">
+                    <label asp-for="LeaveType.Name" class="form-label">Leave Type Name</label>
+                    <input asp-for="LeaveType.Name" class="form-control" placeholder="e.g., Annual Leave, Sick Leave" />
+                    <span asp-validation-for="LeaveType.Name" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="LeaveType.Description" class="form-label">Description</label>
+                    <textarea asp-for="LeaveType.Description" class="form-control" rows="3" placeholder="Brief description of this leave type"></textarea>
+                    <span asp-validation-for="LeaveType.Description" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" asp-for="LeaveType.RequiresDoc" type="checkbox" />
+                        <label class="form-check-label" asp-for="LeaveType.RequiresDoc">
+                            Requires Documentation
+                        </label>
+                        <div class="form-text">Check if this leave type requires supporting documents (e.g., medical certificate for sick leave)</div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" asp-for="LeaveType.AllowHalfDay" type="checkbox" />
+                        <label class="form-check-label" asp-for="LeaveType.AllowHalfDay">
+                            Allow Half Day
+                        </label>
+                        <div class="form-text">Check if employees can take half-day leave for this type</div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                    <a class="btn btn-secondary" asp-page="Index">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

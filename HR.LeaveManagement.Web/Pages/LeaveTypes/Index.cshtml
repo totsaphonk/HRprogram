@@ -1,0 +1,75 @@
+@page
+@model HR.LeaveManagement.Web.Pages.LeaveTypes.IndexModel
+@{
+    ViewData["Title"] = "Leave Types";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2>Leave Type Management</h2>
+                <a class="btn btn-primary" asp-page="Create">Add New Leave Type</a>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h5>Leave Types</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Requires Document</th>
+                                    <th>Allow Half Day</th>
+                                    <th>Entitlement Rules</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var leaveType in Model.LeaveTypes)
+                                {
+                                    <tr>
+                                        <td>@leaveType.LeaveTypeID</td>
+                                        <td>@leaveType.Name</td>
+                                        <td>@leaveType.Description</td>
+                                        <td>
+                                            @if (leaveType.RequiresDoc)
+                                            {
+                                                <span class="badge bg-warning">Yes</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">No</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (leaveType.AllowHalfDay)
+                                            {
+                                                <span class="badge bg-success">Yes</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">No</span>
+                                            }
+                                        </td>
+                                        <td>@leaveType.EntitlementRules.Count rules</td>
+                                        <td>
+                                            <a class="btn btn-sm btn-outline-primary" asp-page="Details" asp-route-id="@leaveType.LeaveTypeID">View</a>
+                                            <a class="btn btn-sm btn-outline-warning" asp-page="Edit" asp-route-id="@leaveType.LeaveTypeID">Edit</a>
+                                            <a class="btn btn-sm btn-outline-info" asp-page="/EntitlementRules/Index" asp-route-leaveTypeId="@leaveType.LeaveTypeID">Rules</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

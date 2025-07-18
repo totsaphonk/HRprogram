@@ -1,0 +1,196 @@
+@page
+@model HR.LeaveManagement.Web.Pages.Notifications.IndexModel
+@{
+    ViewData["Title"] = "Notification History";
+}
+
+<h1>Notification History</h1>
+<p>View all email notifications sent by the system</p>
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <form method="get" class="d-flex">
+            <input type="search" name="searchTerm" value="@Model.SearchTerm" placeholder="Search by email or subject..." class="form-control me-2">
+            <button type="submit" class="btn btn-outline-primary">Search</button>
+        </form>
+    </div>
+    <div class="col-md-6 text-end">
+        <div class="btn-group" role="group">
+            <a href="/Notifications?status=all" class="btn btn-outline-secondary @(Model.StatusFilter == "all" ? "active" : "")">All</a>
+            <a href="/Notifications?status=sent" class="btn btn-outline-success @(Model.StatusFilter == "sent" ? "active" : "")">Sent</a>
+            <a href="/Notifications?status=failed" class="btn btn-outline-danger @(Model.StatusFilter == "failed" ? "active" : "")">Failed</a>
+            <a href="/Notifications?status=pending" class="btn btn-outline-warning @(Model.StatusFilter == "pending" ? "active" : "")">Pending</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Recent Notifications (@Model.NotificationLogs.Count)</h5>
+            </div>
+            <div class="card-body">
+                @if (Model.NotificationLogs.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Recipient</th>
+                                    <th>Subject</th>
+                                    <th>Template</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var log in Model.NotificationLogs)
+                                {
+                                    <tr>
+                                        <td>
+                                            <small>@log.CreatedAt.ToString("MMM dd, yyyy HH:mm")</small>
+                                        </td>
+                                        <td>
+                                            <strong>@log.RecipientName</strong><br>
+                                            <small class="text-muted">@log.RecipientEmail</small>
+                                        </td>
+                                        <td>@log.Subject</td>
+                                        <td>
+                                            <span class="badge bg-info">@log.Template.Name</span>
+                                        </td>
+                                        <td>
+                                            @if (log.Status == "Sent")
+                                            {
+                                                <span class="badge bg-success">
+                                                    <i class="fas fa-check"></i> Sent
+                                                </span>
+                                                @if (log.SentAt.HasValue)
+                                                {
+                                                    <br><small class="text-muted">@log.SentAt.Value.ToString("MMM dd, HH:mm")</small>
+                                                }
+                                            }
+                                            else if (log.Status == "Failed")
+                                            {
+                                                <span class="badge bg-danger">
+                                                    <i class="fas fa-exclamation-triangle"></i> Failed
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-warning">
+                                                    <i class="fas fa-clock"></i> Pending
+                                                </span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary" onclick="viewNotification(@log.LogID)">
+                                                <i class="fas fa-eye"></i> View
+                                            </button>
+                                            @if (log.Status == "Failed")
+                                            {
+                                                <button class="btn btn-sm btn-outline-warning" onclick="retryNotification(@log.LogID)">
+                                                    <i class="fas fa-redo"></i> Retry
+                                                </button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-4">
+                        <i class="fas fa-bell-slash fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No notifications found</h5>
+                        <p class="text-muted">No email notifications have been sent yet.</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Notification Detail Modal -->
+<div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notificationModalLabel">Notification Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="notificationModalBody">
+                Loading...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function viewNotification(logId) {
+        fetch(`/Notifications/Details?id=${logId}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('notificationModalBody').innerHTML = `
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Recipient Information</h6>
+                            <p><strong>Name:</strong> ${data.recipientName}</p>
+                            <p><strong>Email:</strong> ${data.recipientEmail}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Notification Details</h6>
+                            <p><strong>Template:</strong> ${data.templateName}</p>
+                            <p><strong>Status:</strong> ${data.status}</p>
+                            <p><strong>Created:</strong> ${new Date(data.createdAt).toLocaleString()}</p>
+                            ${data.sentAt ? `<p><strong>Sent:</strong> ${new Date(data.sentAt).toLocaleString()}</p>` : ''}
+                        </div>
+                    </div>
+                    <hr>
+                    <h6>Subject</h6>
+                    <p>${data.subject}</p>
+                    <hr>
+                    <h6>Message Content</h6>
+                    <div class="border p-3" style="background-color: #f8f9fa;">
+                        ${data.body}
+                    </div>
+                    ${data.errorMessage ? `
+                        <hr>
+                        <h6 class="text-danger">Error Message</h6>
+                        <p class="text-danger">${data.errorMessage}</p>
+                    ` : ''}
+                `;
+                
+                var modal = new bootstrap.Modal(document.getElementById('notificationModal'));
+                modal.show();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('notificationModalBody').innerHTML = '<div class="alert alert-danger">Error loading notification details.</div>';
+            });
+    }
+    
+    function retryNotification(logId) {
+        if (confirm('Are you sure you want to retry sending this notification?')) {
+            fetch(`/Notifications/Retry?id=${logId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Failed to retry notification: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error occurred while retrying notification.');
+                });
+        }
+    }
+</script>

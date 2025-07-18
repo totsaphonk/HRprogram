@@ -1,0 +1,103 @@
+@page
+@model HR.LeaveManagement.Web.Pages.PublicHolidays.CreateModel
+@{
+    ViewData["Title"] = "Create Public Holiday";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h2>Create New Public Holiday</h2>
+            
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <div class="mb-3">
+                    <label asp-for="PublicHoliday.Name" class="form-label">Holiday Name</label>
+                    <input asp-for="PublicHoliday.Name" class="form-control" placeholder="e.g., Independence Day" />
+                    <span asp-validation-for="PublicHoliday.Name" class="text-danger"></span>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="PublicHoliday.Date" class="form-label">Date</label>
+                            <input asp-for="PublicHoliday.Date" class="form-control" type="date" />
+                            <span asp-validation-for="PublicHoliday.Date" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="PublicHoliday.Region" class="form-label">Region</label>
+                            <select asp-for="PublicHoliday.Region" class="form-control">
+                                <option value="National">National</option>
+                                <option value="Regional">Regional</option>
+                                <option value="State">State</option>
+                                <option value="City">City</option>
+                            </select>
+                            <span asp-validation-for="PublicHoliday.Region" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="PublicHoliday.Description" class="form-label">Description</label>
+                    <textarea asp-for="PublicHoliday.Description" class="form-control" rows="3" placeholder="Brief description of the holiday"></textarea>
+                    <span asp-validation-for="PublicHoliday.Description" class="text-danger"></span>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" asp-for="PublicHoliday.IsRecurring" type="checkbox" />
+                                <label class="form-check-label" asp-for="PublicHoliday.IsRecurring">
+                                    Recurring Holiday
+                                </label>
+                                <div class="form-text">Check if this holiday repeats every year</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" asp-for="PublicHoliday.IsActive" type="checkbox" checked />
+                                <label class="form-check-label" asp-for="PublicHoliday.IsActive">
+                                    Active Holiday
+                                </label>
+                                <div class="form-text">Uncheck to disable this holiday</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="alert alert-info">
+                    <strong>Note:</strong> Public holidays will automatically be excluded from leave day calculations when employees apply for leave.
+                </div>
+                
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Create Holiday</button>
+                    <a class="btn btn-secondary" asp-page="Index">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateInput = document.querySelector('input[type="date"]');
+            const recurringCheckbox = document.querySelector('#PublicHoliday_IsRecurring');
+            
+            dateInput.addEventListener('change', function() {
+                if (this.value) {
+                    const selectedDate = new Date(this.value);
+                    const dayOfWeek = selectedDate.toLocaleDateString('en-US', { weekday: 'long' });
+                    console.log('Selected day:', dayOfWeek);
+                }
+            });
+        });
+    </script>
+}
