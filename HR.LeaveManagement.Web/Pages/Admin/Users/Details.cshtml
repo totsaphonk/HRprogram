@@ -1,0 +1,237 @@
+@page
+@model HR.LeaveManagement.Web.Pages.Admin.Users.DetailsModel
+@{
+    ViewData["Title"] = "User Details";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1>User Details</h1>
+                    <p class="text-muted">View user information and activity</p>
+                </div>
+                <div>
+                    <a href="/Admin/Users/Edit?id=@Model.User.Id" class="btn btn-primary me-2">
+                        <i class="fas fa-edit"></i> Edit User
+                    </a>
+                    <a href="/Admin/Users" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Users
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>User Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-sm-4"><strong>Full Name:</strong></div>
+                        <div class="col-sm-8">@Model.User.FullName</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4"><strong>Username:</strong></div>
+                        <div class="col-sm-8">@Model.User.UserName</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4"><strong>Email:</strong></div>
+                        <div class="col-sm-8">@Model.User.Email</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4"><strong>Phone:</strong></div>
+                        <div class="col-sm-8">@(Model.User.PhoneNumber ?? "Not provided")</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4"><strong>Role:</strong></div>
+                        <div class="col-sm-8">
+                            <span class="badge bg-@(Model.User.Role == "System Admin" ? "danger" : Model.User.Role == "HR Admin" ? "warning" : Model.User.Role == "Line Manager" ? "info" : "secondary")">
+                                @Model.User.Role
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4"><strong>Department:</strong></div>
+                        <div class="col-sm-8">@Model.User.Department</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4"><strong>Status:</strong></div>
+                        <div class="col-sm-8">
+                            @if (Model.User.IsActive)
+                            {
+                                <span class="badge bg-success">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Inactive</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Account Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-sm-4"><strong>Created:</strong></div>
+                        <div class="col-sm-8">@Model.User.CreatedAt.ToString("MMM dd, yyyy")</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4"><strong>Last Login:</strong></div>
+                        <div class="col-sm-8">
+                            @if (Model.User.LastLoginAt.HasValue)
+                            {
+                                @Model.User.LastLoginAt.Value.ToString("MMM dd, yyyy HH:mm")
+                            }
+                            else
+                            {
+                                <span class="text-muted">Never</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4"><strong>Email Confirmed:</strong></div>
+                        <div class="col-sm-8">
+                            @if (Model.User.EmailConfirmed)
+                            {
+                                <span class="badge bg-success">Yes</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning">No</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-4"><strong>Two Factor:</strong></div>
+                        <div class="col-sm-8">
+                            @if (Model.User.TwoFactorEnabled)
+                            {
+                                <span class="badge bg-success">Enabled</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Disabled</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5>Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-warning" onclick="resetPassword('@Model.User.Id')">
+                            <i class="fas fa-key"></i> Reset Password
+                        </button>
+                        <button type="button" class="btn btn-@(Model.User.IsActive ? "outline-danger" : "outline-success")" onclick="toggleUserStatus('@Model.User.Id', @Model.User.IsActive.ToString().ToLower())">
+                            <i class="fas fa-@(Model.User.IsActive ? "ban" : "check")"></i> 
+                            @(Model.User.IsActive ? "Deactivate" : "Activate") User
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity History -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Recent Activity</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.RecentLeaveRequests.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>From Date</th>
+                                        <th>To Date</th>
+                                        <th>Duration</th>
+                                        <th>Status</th>
+                                        <th>Created</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var request in Model.RecentLeaveRequests)
+                                    {
+                                        <tr>
+                                            <td>@request.LeaveType?.Name</td>
+                                            <td>@request.FromDate.ToString("MMM dd, yyyy")</td>
+                                            <td>@request.ToDate.ToString("MMM dd, yyyy")</td>
+                                            <td>@request.Duration days</td>
+                                            <td>
+                                                <span class="badge bg-@(request.Status == "Approved" ? "success" : request.Status == "Rejected" ? "danger" : "warning")">
+                                                    @request.Status
+                                                </span>
+                                            </td>
+                                            <td>@request.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <i class="fas fa-calendar-alt fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No recent leave requests</h5>
+                            <p class="text-muted">This user has not submitted any leave requests yet.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function resetPassword(userId) {
+            if (confirm('Are you sure you want to reset this user\'s password?')) {
+                fetch(`/Admin/Users/ResetPassword?id=${userId}`, { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Password reset successfully. New password: ' + data.newPassword);
+                        } else {
+                            alert('Error: ' + data.message);
+                        }
+                    });
+            }
+        }
+
+        function toggleUserStatus(userId, isActive) {
+            var action = isActive ? 'deactivate' : 'activate';
+            if (confirm(`Are you sure you want to ${action} this user?`)) {
+                fetch(`/Admin/Users/ToggleStatus?id=${userId}`, { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            alert('Error: ' + data.message);
+                        }
+                    });
+            }
+        }
+    </script>
+}

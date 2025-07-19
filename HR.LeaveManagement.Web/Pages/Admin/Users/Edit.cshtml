@@ -1,0 +1,178 @@
+@page
+@model HR.LeaveManagement.Web.Pages.Admin.Users.EditModel
+@{
+    ViewData["Title"] = "Edit User";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1>Edit User</h1>
+                    <p class="text-muted">Modify user information and settings</p>
+                </div>
+                <div>
+                    <a href="/Admin/Users" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Users
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>User Information</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <input type="hidden" asp-for="Input.Id" />
+                        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Input.FullName" class="form-label">Full Name</label>
+                            <input asp-for="Input.FullName" class="form-control" placeholder="Enter full name" />
+                            <span asp-validation-for="Input.FullName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Email" class="form-label">Email Address</label>
+                            <input asp-for="Input.Email" class="form-control" type="email" placeholder="Enter email address" />
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.UserName" class="form-label">Username</label>
+                            <input asp-for="Input.UserName" class="form-control" placeholder="Enter username" />
+                            <span asp-validation-for="Input.UserName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Role" class="form-label">Role</label>
+                            <select asp-for="Input.Role" class="form-select">
+                                <option value="">Select Role</option>
+                                <option value="Employee">Employee</option>
+                                <option value="Line Manager">Line Manager</option>
+                                <option value="HR Admin">HR Admin</option>
+                                <option value="System Admin">System Admin</option>
+                            </select>
+                            <span asp-validation-for="Input.Role" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Department" class="form-label">Department</label>
+                            <select asp-for="Input.Department" class="form-select">
+                                <option value="">Select Department</option>
+                                @foreach (var dept in Model.Departments)
+                                {
+                                    <option value="@dept.Name">@dept.Name</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Input.Department" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.PhoneNumber" class="form-label">Phone Number</label>
+                            <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Enter phone number" />
+                            <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input asp-for="Input.IsActive" class="form-check-input" type="checkbox">
+                                <label asp-for="Input.IsActive" class="form-check-label">
+                                    Active User
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Account Information</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <small class="text-muted">Created: @Model.User.CreatedAt.ToString("MMM dd, yyyy")</small>
+                                </div>
+                                <div class="col-md-6">
+                                    <small class="text-muted">
+                                        Last Login: 
+                                        @if (Model.User.LastLoginAt.HasValue)
+                                        {
+                                            @Model.User.LastLoginAt.Value.ToString("MMM dd, yyyy")
+                                        }
+                                        else
+                                        {
+                                            <span>Never</span>
+                                        }
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="button" class="btn btn-secondary me-md-2" onclick="history.back()">Cancel</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Account Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-warning" onclick="resetPassword('@Model.User.Id')">
+                            <i class="fas fa-key"></i> Reset Password
+                        </button>
+                        <button type="button" class="btn btn-@(Model.User.IsActive ? "outline-danger" : "outline-success")" onclick="toggleUserStatus('@Model.User.Id', @Model.User.IsActive.ToString().ToLower())">
+                            <i class="fas fa-@(Model.User.IsActive ? "ban" : "check")"></i> 
+                            @(Model.User.IsActive ? "Deactivate" : "Activate") User
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function resetPassword(userId) {
+            if (confirm('Are you sure you want to reset this user\'s password?')) {
+                fetch(`/Admin/Users/ResetPassword?id=${userId}`, { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Password reset successfully. New password: ' + data.newPassword);
+                        } else {
+                            alert('Error: ' + data.message);
+                        }
+                    });
+            }
+        }
+
+        function toggleUserStatus(userId, isActive) {
+            var action = isActive ? 'deactivate' : 'activate';
+            if (confirm(`Are you sure you want to ${action} this user?`)) {
+                fetch(`/Admin/Users/ToggleStatus?id=${userId}`, { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            alert('Error: ' + data.message);
+                        }
+                    });
+            }
+        }
+    </script>
+}

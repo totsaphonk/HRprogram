@@ -19,7 +19,7 @@ namespace HR.LeaveManagement.Web.Pages.Departments
         public async Task OnGetAsync()
         {
             Departments = await _context.Departments
-                .Include(d => d.Employees)
+                .Include(d => d.Employees.Where(e => e.ActiveStatus))
                 .OrderBy(d => d.Name)
                 .ToListAsync();
         }

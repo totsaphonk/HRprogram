@@ -1,0 +1,84 @@
+@page
+@model HR.LeaveManagement.Web.Pages.Departments.DetailsModel
+@{
+    ViewData["Title"] = "Department Details";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2>Department Details</h2>
+                <div>
+                    <a class="btn btn-outline-primary" asp-page="Edit" asp-route-id="@Model.Department.DepartmentID">Edit</a>
+                    <a class="btn btn-secondary" asp-page="Index">Back to List</a>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h5>@Model.Department.Name</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-4">Name:</dt>
+                                <dd class="col-sm-8">@Model.Department.Name</dd>
+                                
+                                <dt class="col-sm-4">Description:</dt>
+                                <dd class="col-sm-8">@(string.IsNullOrEmpty(Model.Department.Description) ? "No description provided" : Model.Department.Description)</dd>
+                                
+                                <dt class="col-sm-4">Manager ID:</dt>
+                                <dd class="col-sm-8">@(Model.Department.ManagerID?.ToString() ?? "Not Assigned")</dd>
+                                
+                                <dt class="col-sm-4">Employee Count:</dt>
+                                <dd class="col-sm-8">@Model.Department.Employees.Count employees</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            @if (Model.Department.Employees.Any())
+            {
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5>Employees in this Department</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Join Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var employee in Model.Department.Employees.OrderBy(e => e.FullName))
+                                    {
+                                        <tr>
+                                            <td>@employee.FullName</td>
+                                            <td>@employee.Email</td>
+                                            <td>@employee.Role</td>
+                                            <td>@employee.JoinDate.ToString("MMM dd, yyyy")</td>
+                                            <td>
+                                                <span class="badge @(employee.ActiveStatus ? "bg-success" : "bg-secondary")">
+                                                    @(employee.ActiveStatus ? "Active" : "Inactive")
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

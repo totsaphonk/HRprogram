@@ -80,6 +80,11 @@ namespace HR.LeaveManagement.Web.Pages.Admin
             RoleDistribution.Employee = await _context.Users.Where(u => u.Role == "Employee").CountAsync();
         }
 
+        public async Task<IActionResult> OnGetToggleStatusAsync(string id)
+        {
+            return await OnPostToggleStatusAsync(id);
+        }
+
         public async Task<IActionResult> OnPostToggleStatusAsync(string id)
         {
             var user = await _context.Users.FindAsync(id);
@@ -92,6 +97,11 @@ namespace HR.LeaveManagement.Web.Pages.Admin
             await _context.SaveChangesAsync();
 
             return new JsonResult(new { success = true, message = $"User {(user.IsActive ? "activated" : "deactivated")} successfully" });
+        }
+
+        public async Task<IActionResult> OnGetResetPasswordAsync(string id)
+        {
+            return await OnPostResetPasswordAsync(id);
         }
 
         public async Task<IActionResult> OnPostResetPasswordAsync(string id)

@@ -34,6 +34,12 @@ namespace HR.LeaveManagement.Web.Data
             );
 
             // Configure relationships
+            modelBuilder.Entity<Employee>()
+                .HasOne(e => e.DepartmentNavigation)
+                .WithMany(d => d.Employees)
+                .HasForeignKey(e => e.DepartmentID)
+                .OnDelete(DeleteBehavior.SetNull);
+
             modelBuilder.Entity<LeaveRequest>()
                 .HasOne(lr => lr.Employee)
                 .WithMany(e => e.LeaveRequests)
@@ -66,9 +72,9 @@ namespace HR.LeaveManagement.Web.Data
             );
 
             modelBuilder.Entity<Employee>().HasData(
-                new Employee { EmployeeID = 1, FullName = "John Doe", Department = "IT", JoinDate = DateTime.Parse("2023-01-15"), Role = "Developer", Email = "john.doe@company.com" },
-                new Employee { EmployeeID = 2, FullName = "Jane Smith", Department = "HR", JoinDate = DateTime.Parse("2022-06-10"), Role = "HR Manager", Email = "jane.smith@company.com" },
-                new Employee { EmployeeID = 3, FullName = "Bob Johnson", Department = "Finance", JoinDate = DateTime.Parse("2021-03-20"), Role = "Accountant", Email = "bob.johnson@company.com" }
+                new Employee { EmployeeID = 1, FullName = "John Doe", Department = "IT", DepartmentID = 2, JoinDate = DateTime.Parse("2023-01-15"), Role = "Developer", Email = "john.doe@company.com" },
+                new Employee { EmployeeID = 2, FullName = "Jane Smith", Department = "HR", DepartmentID = 1, JoinDate = DateTime.Parse("2022-06-10"), Role = "HR Manager", Email = "jane.smith@company.com" },
+                new Employee { EmployeeID = 3, FullName = "Bob Johnson", Department = "Finance", DepartmentID = 3, JoinDate = DateTime.Parse("2021-03-20"), Role = "Accountant", Email = "bob.johnson@company.com" }
             );
 
             modelBuilder.Entity<LeaveType>().HasData(
