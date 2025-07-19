@@ -1,5 +1,5 @@
-using HR.LeaveManagement.Domain.Entities;
-using HR.LeaveManagement.Persistence.Data;
+using HR.LeaveManagement.Web.Models;
+using HR.LeaveManagement.Web.Data;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,10 +18,7 @@ namespace HR.LeaveManagement.Web.Pages.Employees
 
         public async Task OnGetAsync()
         {
-            Employees = await _context.Employees
-                .Include(e => e.Department)
-                .Include(e => e.Unit)
-                .ToListAsync();
+            Employees = await _context.Employees.ToListAsync();
         }
     }
 }
