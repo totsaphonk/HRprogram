@@ -1,0 +1,110 @@
+@page
+@model HR.LeaveManagement.Web.Pages.LeaveTypes.DetailsModel
+@{
+    ViewData["Title"] = "Leave Type Details";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2>@Model.LeaveType.Name - Details</h2>
+                <div>
+                    <a class="btn btn-outline-warning" asp-page="Edit" asp-route-id="@Model.LeaveType.LeaveTypeID">Edit</a>
+                    <a class="btn btn-secondary" asp-page="Index">Back to List</a>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h5>Leave Type Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-4">ID:</dt>
+                                <dd class="col-sm-8">@Model.LeaveType.LeaveTypeID</dd>
+                                
+                                <dt class="col-sm-4">Name:</dt>
+                                <dd class="col-sm-8">@Model.LeaveType.Name</dd>
+                                
+                                <dt class="col-sm-4">Description:</dt>
+                                <dd class="col-sm-8">@Model.LeaveType.Description</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-6">Requires Document:</dt>
+                                <dd class="col-sm-6">
+                                    @if (Model.LeaveType.RequiresDoc)
+                                    {
+                                        <span class="badge bg-warning">Yes</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">No</span>
+                                    }
+                                </dd>
+                                
+                                <dt class="col-sm-6">Allow Half Day:</dt>
+                                <dd class="col-sm-6">
+                                    @if (Model.LeaveType.AllowHalfDay)
+                                    {
+                                        <span class="badge bg-success">Yes</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">No</span>
+                                    }
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mt-3">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5>Entitlement Rules (@Model.LeaveType.EntitlementRules.Count)</h5>
+                        <a class="btn btn-sm btn-primary" asp-page="/EntitlementRules/Create" asp-route-leaveTypeId="@Model.LeaveType.LeaveTypeID">Add Rule</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @if (Model.LeaveType.EntitlementRules.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Condition</th>
+                                        <th>Entitled Days</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var rule in Model.LeaveType.EntitlementRules)
+                                    {
+                                        <tr>
+                                            <td>@rule.Condition</td>
+                                            <td>@rule.EntitledDays days</td>
+                                            <td>
+                                                <a class="btn btn-sm btn-outline-warning" asp-page="/EntitlementRules/Edit" asp-route-id="@rule.RuleID">Edit</a>
+                                                <a class="btn btn-sm btn-outline-danger" asp-page="/EntitlementRules/Delete" asp-route-id="@rule.RuleID">Delete</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No entitlement rules defined for this leave type.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

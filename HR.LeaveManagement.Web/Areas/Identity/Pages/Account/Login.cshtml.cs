@@ -90,14 +90,30 @@ namespace HR.LeaveManagement.Web.Areas.Identity.Pages.Account
             public bool RememberMe { get; set; }
         }
 
-        public async Task OnGetAsync(string returnUrl = null)
+        public async Task OnGetAsync(string returnUrl = null, bool loggedOut = false)
         {
+            // If user is already authenticated and not coming from logout, redirect to dashboard
+            if (_signInManager.IsSignedIn(User) && !loggedOut)
+            {
+                Response.Redirect("/Dashboard");
+                return;
+            }
+
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);
             }
 
-            returnUrl ??= Url.Content("~/Dashboard");
+            // If coming from logout, don't set a return URL to prevent auto-redirect
+            if (loggedOut)
+            {
+                returnUrl = null;
+                ViewData["LoggedOut"] = true;
+            }
+            else
+            {
+                returnUrl ??= Url.Content("~/Dashboard");
+            }
 
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
@@ -109,6 +125,7 @@ namespace HR.LeaveManagement.Web.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            // Only set default return URL if one isn't already specified
             returnUrl ??= Url.Content("~/Dashboard");
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();

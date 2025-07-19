@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authentication;
 
 namespace HR.LeaveManagement.Web.Areas.Identity.Pages.Account
 {
@@ -26,18 +27,20 @@ namespace HR.LeaveManagement.Web.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPost(string returnUrl = null)
         {
+            // Sign out the user
             await _signInManager.SignOutAsync();
+            
+            // Clear all authentication schemes
+            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+            
+            // Clear session data
+            HttpContext.Session.Clear();
+            
             _logger.LogInformation("User logged out.");
-            if (returnUrl != null)
-            {
-                return LocalRedirect(returnUrl);
-            }
-            else
-            {
-                // This needs to be a redirect so that the browser performs a new
-                // request and the identity for the user gets updated.
-                return RedirectToPage();
-            }
+            
+            // Always redirect to login page after logout, with explicit logout indication
+            return RedirectToPage("/Account/Login", new { area = "Identity", loggedOut = true });
         }
     }
 }

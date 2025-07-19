@@ -107,6 +107,25 @@ namespace HR.LeaveManagement.Web.Pages.Admin.Users
 
             if (result.Succeeded)
             {
+                // Also update corresponding Employee record
+                var employee = await _context.Employees.FirstOrDefaultAsync(e => e.Email == user.Email);
+                if (employee != null)
+                {
+                    employee.FullName = user.FullName;
+                    employee.Role = user.Role;
+                    employee.Department = user.Department;
+                    employee.ActiveStatus = user.IsActive;
+
+                    // Find the department ID
+                    var department = await _context.Departments.FirstOrDefaultAsync(d => d.Name == user.Department);
+                    if (department != null)
+                    {
+                        employee.DepartmentID = department.DepartmentID;
+                    }
+
+                    await _context.SaveChangesAsync();
+                }
+
                 TempData["SuccessMessage"] = $"User '{user.FullName}' has been updated successfully.";
                 return RedirectToPage("/Admin/Users");
             }

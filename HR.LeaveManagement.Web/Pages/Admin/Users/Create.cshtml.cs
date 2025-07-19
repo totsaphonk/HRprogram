@@ -71,6 +71,27 @@ namespace HR.LeaveManagement.Web.Pages.Admin.Users
 
             if (result.Succeeded)
             {
+                // Also create corresponding Employee record
+                var employee = new Employee
+                {
+                    FullName = user.FullName,
+                    Email = user.Email,
+                    Role = user.Role,
+                    Department = user.Department,
+                    ActiveStatus = user.IsActive,
+                    JoinDate = DateTime.UtcNow
+                };
+
+                // Find the department ID
+                var department = await _context.Departments.FirstOrDefaultAsync(d => d.Name == user.Department);
+                if (department != null)
+                {
+                    employee.DepartmentID = department.DepartmentID;
+                }
+
+                _context.Employees.Add(employee);
+                await _context.SaveChangesAsync();
+
                 TempData["SuccessMessage"] = $"User '{user.FullName}' has been created successfully.";
                 return RedirectToPage("/Admin/Users");
             }

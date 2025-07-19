@@ -128,14 +128,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGVwYXJ0bWVudHNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Project/HRprogram/HR.LeaveManagement.Web/Pages/Employees/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRW1wbG95ZWVzXENyZWF0ZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Project/HRprogram/HR.LeaveManagement.Web/Pages/Employees/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRW1wbG95ZWVzXEluZGV4LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/Project/HRprogram/HR.LeaveManagement.Web/Pages/EntitlementRules/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRW50aXRsZW1lbnRSdWxlc1xDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -174,6 +166,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/Project/HRprogram/HR.LeaveManagement.Web/Pages/LeaveTypes/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTGVhdmVUeXBlc1xDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Project/HRprogram/HR.LeaveManagement.Web/Pages/LeaveTypes/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTGVhdmVUeXBlc1xEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Project/HRprogram/HR.LeaveManagement.Web/Pages/LeaveTypes/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTGVhdmVUeXBlc1xFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Project/HRprogram/HR.LeaveManagement.Web/Pages/LeaveTypes/Index.cshtml]

@@ -12,7 +12,7 @@ namespace HR.LeaveManagement.Web.Models
         public int LeaveTypeID { get; set; }
         
         [Required]
-        [StringLength(50)]
+        [StringLength(100)]
         public string Condition { get; set; } = string.Empty;
         
         [Required]
@@ -20,6 +20,6 @@ namespace HR.LeaveManagement.Web.Models
         
         // Navigation properties
         [ForeignKey("LeaveTypeID")]
-        public virtual LeaveType LeaveType { get; set; } = null!;
+        public virtual LeaveType? LeaveType { get; set; }
     }
 }

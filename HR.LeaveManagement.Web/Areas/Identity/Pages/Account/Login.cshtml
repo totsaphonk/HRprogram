@@ -43,6 +43,13 @@
                 <section>
                 <form id="account" method="post">
                     <h4 class="text-primary mb-3">Sign In</h4>
+                    @if (ViewData["LoggedOut"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            You have been successfully logged out. Please sign in again to continue.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
                     <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                 <div class="form-floating mb-3">
                     <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />

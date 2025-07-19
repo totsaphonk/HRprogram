@@ -1,0 +1,56 @@
+@page
+@model HR.LeaveManagement.Web.Pages.LeaveTypes.EditModel
+@{
+    ViewData["Title"] = "Edit Leave Type";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h2>Edit Leave Type</h2>
+            
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="LeaveType.LeaveTypeID" />
+                
+                <div class="mb-3">
+                    <label asp-for="LeaveType.Name" class="form-label">Name</label>
+                    <input asp-for="LeaveType.Name" class="form-control" />
+                    <span asp-validation-for="LeaveType.Name" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="LeaveType.Description" class="form-label">Description</label>
+                    <textarea asp-for="LeaveType.Description" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="LeaveType.Description" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3 form-check">
+                    <input asp-for="LeaveType.RequiresDoc" class="form-check-input" type="checkbox" />
+                    <label asp-for="LeaveType.RequiresDoc" class="form-check-label">
+                        Requires Document
+                    </label>
+                    <div class="form-text">Check if this leave type requires supporting documentation</div>
+                </div>
+                
+                <div class="mb-3 form-check">
+                    <input asp-for="LeaveType.AllowHalfDay" class="form-check-input" type="checkbox" />
+                    <label asp-for="LeaveType.AllowHalfDay" class="form-check-label">
+                        Allow Half Day
+                    </label>
+                    <div class="form-text">Check if employees can request half-day leave for this type</div>
+                </div>
+                
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <a class="btn btn-secondary" asp-page="Details" asp-route-id="@Model.LeaveType.LeaveTypeID">Cancel</a>
+                    <a class="btn btn-outline-secondary" asp-page="Index">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

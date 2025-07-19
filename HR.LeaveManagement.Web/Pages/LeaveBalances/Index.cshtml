@@ -8,23 +8,44 @@
     <div class="row">
         <div class="col-md-12">
             <h2>Leave Balances - @Model.CurrentYear</h2>
-            <p class="text-muted">View your current leave entitlements and usage</p>
+            @if (Model.IsAdmin)
+            {
+                <p class="text-muted">View leave entitlements and usage for all employees</p>
+            }
+            else
+            {
+                <p class="text-muted">View your current leave entitlements and usage</p>
+            }
             
             <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="employeeSelect" class="form-label">Select Employee</label>
-                        <select id="employeeSelect" class="form-control" onchange="loadBalances()">
-                            <option value="">Select Employee</option>
-                            @foreach (var employee in Model.Employees)
-                            {
-                                <option value="@employee.EmployeeID" selected="@(employee.EmployeeID == Model.SelectedEmployeeId)">
-                                    @employee.FullName (@employee.Department)
-                                </option>
-                            }
-                        </select>
+                @if (Model.IsAdmin)
+                {
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="employeeSelect" class="form-label">Select Employee</label>
+                            <select id="employeeSelect" class="form-control" onchange="loadBalances()">
+                                <option value="">Select Employee</option>
+                                @foreach (var employee in Model.Employees)
+                                {
+                                    <option value="@employee.EmployeeID" selected="@(employee.EmployeeID == Model.SelectedEmployeeId)">
+                                        @employee.FullName (@employee.Department)
+                                    </option>
+                                }
+                            </select>
+                        </div>
                     </div>
-                </div>
+                }
+                else
+                {
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Employee</label>
+                            <div class="form-control-plaintext">
+                                <strong>@Model.CurrentUser?.FullName (@Model.CurrentUser?.Department)</strong>
+                            </div>
+                        </div>
+                    </div>
+                }
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label for="yearSelect" class="form-label">Year</label>
@@ -92,10 +113,16 @@
                     <strong>No leave balances found</strong> for the selected employee and year.
                 </div>
             }
-            else
+            else if (Model.IsAdmin)
             {
                 <div class="alert alert-secondary">
                     <strong>Select an employee</strong> to view their leave balances.
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    <strong>No employee record found</strong> for your account. Please contact HR to link your user account to an employee record.
                 </div>
             }
         </div>
@@ -105,11 +132,20 @@
 @section Scripts {
     <script>
         function loadBalances() {
-            const employeeId = document.getElementById('employeeSelect').value;
             const year = document.getElementById('yearSelect').value;
+            const employeeSelect = document.getElementById('employeeSelect');
             
-            if (employeeId && year) {
-                window.location.href = `?employeeId=${employeeId}&year=${year}`;
+            if (@Model.IsAdmin.ToString().ToLower()) {
+                const employeeId = employeeSelect ? employeeSelect.value : '';
+                if (employeeId && year) {
+                    window.location.href = `?employeeId=${employeeId}&year=${year}`;
+                } else if (year && !employeeId) {
+                    window.location.href = `?year=${year}`;
+                }
+            } else {
+                if (year) {
+                    window.location.href = `?year=${year}`;
+                }
             }
         }
     </script>
