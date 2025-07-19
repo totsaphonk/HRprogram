@@ -51,9 +51,7 @@
             overflow-y: auto;
         }
 
-        .sidebar.active {
-            margin-left: calc(var(--sidebar-width) * -1);
-        }
+
 
         .sidebar .sidebar-header {
             padding: 1.5rem 1rem;
@@ -105,16 +103,7 @@
             transition: all 0.3s;
         }
 
-        .content-wrapper.active {
-            margin-left: 0;
-        }
 
-        .top-navbar {
-            background: #fff;
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid #e3e6f0;
-            box-shadow: 0 0.15rem 1.75rem 0 rgba(33, 40, 50, 0.15);
-        }
 
         .main-content {
             padding: 1.5rem;
@@ -124,28 +113,16 @@
             display: none;
         }
 
-        .sidebar-toggle {
-            background: none;
-            border: none;
-            color: var(--sidebar-bg);
-            font-size: 1.2rem;
-        }
+
 
         @@media (max-width: 768px) {
             .sidebar {
-                margin-left: calc(var(--sidebar-width) * -1);
-            }
-            
-            .sidebar.active {
-                margin-left: 0;
+                min-width: 100%;
+                max-width: 100%;
             }
             
             .content-wrapper {
                 margin-left: 0;
-            }
-            
-            .content-wrapper.active {
-                margin-left: var(--sidebar-width);
             }
         }
 
@@ -240,89 +217,88 @@
 
                 @if (currentUser?.Role == "System Admin" || currentUser?.Role == "HR Admin")
                 {
-                    <li class="nav-item mt-3">
-                        <div class="px-3 py-2">
-                            <small class="text-white-50 text-uppercase">Administration</small>
-                        </div>
-                    </li>
-                    
-                    <li class="nav-item">
-                        <a class="nav-link" href="/Admin/Dashboard">
-                            <i class="fas fa-cogs"></i>Admin Dashboard
-                        </a>
-                    </li>
-                    
-                    <li class="nav-item">
-                        <a class="nav-link" href="/Admin/Users">
-                            <i class="fas fa-user-cog"></i>User Management
-                        </a>
-                    </li>
-                    
-                    <li class="nav-item">
-                        <a class="nav-link" href="/Admin/Settings">
-                            <i class="fas fa-tools"></i>System Settings
-                        </a>
-                    </li>
+                <li class="nav-item mt-3">
+                <div class="px-3 py-2">
+                <small class="text-white-50 text-uppercase">Administration</small>
+                </div>
+                </li>
+                
+                <li class="nav-item">
+                <a class="nav-link" href="/Admin/Dashboard">
+                <i class="fas fa-cogs"></i>Admin Dashboard
+                </a>
+                </li>
+                
+                <li class="nav-item">
+                <a class="nav-link" href="/Admin/Users">
+                <i class="fas fa-user-cog"></i>User Management
+                </a>
+                </li>
+                
+                <li class="nav-item">
+                <a class="nav-link" href="/Admin/Settings">
+                <i class="fas fa-tools"></i>System Settings
+                </a>
+                </li>
                 }
+
+                <!-- User Account Section -->
+                <li class="nav-item mt-3">
+                    <div class="px-3 py-2">
+                        <small class="text-white-50 text-uppercase">Account</small>
+                    </div>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/Identity/Account/Manage">
+                        <i class="fas fa-user"></i>Profile
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/Identity/Account/Manage/ChangePassword">
+                        <i class="fas fa-key"></i>Change Password
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="document.getElementById('logoutForm').submit(); return false;">
+                        <i class="fas fa-sign-out-alt"></i>Logout
+                    </a>
+                </li>
             </ul>
         </nav>
 
         <!-- Content Wrapper -->
         <div id="content" class="content-wrapper">
-            <!-- Top Navbar -->
-            <nav class="top-navbar d-flex justify-content-between align-items-center">
-                <div>
-                    <button type="button" id="sidebarCollapse" class="sidebar-toggle">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <span class="ms-3 fw-bold text-muted">@ViewData["Title"]</span>
-                </div>
-
-                <div class="d-flex align-items-center">
-                    <!-- Notifications -->
-                    <div class="dropdown me-3">
-                        <button class="btn btn-link text-muted position-relative" type="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-bell fa-lg"></i>
-                            <span class="notification-badge">3</span>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><h6 class="dropdown-header">Notifications</h6></li>
-                            <li><a class="dropdown-item" href="#"><small class="text-muted">New leave request submitted</small></a></li>
-                            <li><a class="dropdown-item" href="#"><small class="text-muted">Leave request approved</small></a></li>
-                            <li><a class="dropdown-item" href="#"><small class="text-muted">System backup completed</small></a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-center" href="/Notifications">View All</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- User Dropdown -->
-                    <div class="dropdown user-dropdown">
-                        <button class="btn btn-link text-decoration-none d-flex align-items-center" type="button" data-bs-toggle="dropdown">
-                            <div class="me-2 text-end">
-                                <div class="fw-bold text-dark">@currentUser?.FullName</div>
-                                <small class="text-muted">@currentUser?.Role</small>
-                            </div>
-                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                                @(currentUser?.FullName?.FirstOrDefault() ?? 'U')
-                            </div>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><h6 class="dropdown-header">Account</h6></li>
-                            <li><a class="dropdown-item" href="/Identity/Account/Manage"><i class="fas fa-user me-2"></i>Profile</a></li>
-                            <li><a class="dropdown-item" href="/Admin/Settings"><i class="fas fa-cog me-2"></i>Settings</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <form asp-page="/Identity/Account/Logout" asp-route-returnUrl="/" method="post" class="d-inline">
-                                    <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt me-2"></i>Logout</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-
             <!-- Main Content -->
             <div class="main-content">
+                <!-- Page Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+                    <div>
+                        <h4 class="mb-0 text-gray-800">@ViewData["Title"]</h4>
+                        <small class="text-muted">Welcome back, @currentUser?.FullName</small>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <!-- Notifications -->
+                        <div class="dropdown me-3">
+                            <button class="btn btn-link text-muted position-relative" type="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-bell fa-lg"></i>
+                                <span class="notification-badge">3</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><h6 class="dropdown-header">Notifications</h6></li>
+                                <li><a class="dropdown-item" href="#"><small class="text-muted">New leave request submitted</small></a></li>
+                                <li><a class="dropdown-item" href="#"><small class="text-muted">Leave request approved</small></a></li>
+                                <li><a class="dropdown-item" href="#"><small class="text-muted">System backup completed</small></a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-center" href="/Notifications">View All</a></li>
+                            </ul>
+                        </div>
+                        <small class="text-muted">@currentUser?.Role</small>
+                    </div>
+                </div>
+                
                 @if (TempData["SuccessMessage"] != null)
                 {
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -344,17 +320,15 @@
         </div>
     </div>
 
+    <!-- Hidden logout form -->
+    <form id="logoutForm" asp-page="/Identity/Account/Logout" asp-route-returnUrl="/" method="post" style="display: none;">
+    </form>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     <script>
-        // Sidebar toggle functionality
-        document.getElementById('sidebarCollapse').addEventListener('click', function () {
-            document.getElementById('sidebar').classList.toggle('active');
-            document.getElementById('content').classList.toggle('active');
-        });
-
         // Set active nav item based on current page
         document.addEventListener('DOMContentLoaded', function() {
             const currentPath = window.location.pathname;
